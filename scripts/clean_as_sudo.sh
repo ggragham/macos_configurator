@@ -39,6 +39,8 @@ rm -rfv /var/log/*
 
 # Delete Siri metadata
 rm -rfv ~/Library/Assistant/SiriAnalytics.db
+chmod -R 000 ~/Library/Assistant/SiriAnalytics.db
+chflags -R uchg ~/Library/Assistant/SiriAnalytics.db
 
 # Delete typing history
 rm -rfv "~/Library/LanguageModeling/*" "~/Library/Spelling/*" "~/Library/Suggestions/*"
@@ -211,3 +213,35 @@ rm -r /Library/Application\ Support/Apple/Remote\ Desktop/
 rm -rfv ~/Library/Developer/Xcode/DerivedData/* &>/dev/null
 rm -rfv ~/Library/Developer/Xcode/Archives/* &>/dev/null
 rm -rfv ~/Library/Developer/Xcode/iOS Device Logs/* &>/dev/null
+
+# Clean bluetooth metadata
+defaults delete /Library/Preferences/com.apple.Bluetooth.plist DeviceCache
+defaults delete /Library/Preferences/com.apple.Bluetooth.plist IDSPairedDevices
+defaults delete /Library/Preferences/com.apple.Bluetooth.plist PANDevices
+defaults delete /Library/Preferences/com.apple.Bluetooth.plist PANInterfaces
+defaults delete /Library/Preferences/com.apple.Bluetooth.plist SCOAudioDevices
+
+# Clean quicklook cache
+qlmanage -r cache
+rm -rfv "~/Library/Application Support/Quick Look/*"
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/thumbnails.fraghandler
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/exclusive
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/index.sqlite
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/index.sqlite-shm
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/index.sqlite-wal
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/resetreason
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/thumbnails.data
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/thumbnails.fraghandler
+
+# Delete document revision
+rm -rfv /.DocumentRevisions-V100/*
+
+# Delete saved application state
+rm -rfv "~/Library/Saved Application State/*"
+
+# Delete iTunes metadata
+defaults delete ~/Library/Preferences/com.apple.iTunes.plist recentSearches
+
+# Disable if don't user Apple ID
+defaults delete ~/Library/Preferences/com.apple.iTunes.plist StoreUserInfo
+defaults delete ~/Library/Preferences/com.apple.iTunes.plist WirelessBuddyID

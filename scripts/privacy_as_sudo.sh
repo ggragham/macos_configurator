@@ -27,10 +27,6 @@ systemsetup -setremoteappleevents off
 # Disable Spotlight indexing
 mdutil -i off -d /
 
-# Disable if don't user Apple ID
-defaults delete ~/Library/Preferences/com.apple.iTunes.plist StoreUserInfo
-defaults delete ~/Library/Preferences/com.apple.iTunes.plist WirelessBuddyID
-
 # Enable application firewall
 /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 defaults write /Library/Preferences/com.apple.alf globalstate -bool true

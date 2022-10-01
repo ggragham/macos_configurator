@@ -41,3 +41,19 @@ if type "xcrun" &>/dev/null; then
     xcrun simctl shutdown all
     xcrun simctl erase all
 fi
+
+# Clean quicklook thumbnails data
+qlmanage -r cache
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/exclusive
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/index.sqlite
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/index.sqlite-shm
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/index.sqlite-wal
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/resetreason
+rm -rfv $(getconf DARWIN_USER_CACHE_DIR)/com.apple.QuickLook.thumbnailcache/thumbnails.data
+
+# Clean finder cache
+defaults delete ~/Library/Preferences/com.apple.finder.plist FXDesktopVolumePositions
+defaults delete ~/Library/Preferences/com.apple.finder.plist FXRecentFolders
+defaults delete ~/Library/Preferences/com.apple.finder.plist RecentMoveAndCopyDestinations
+defaults delete ~/Library/Preferences/com.apple.finder.plist RecentSearches
+defaults delete ~/Library/Preferences/com.apple.finder.plist SGTRecentFileSearches
