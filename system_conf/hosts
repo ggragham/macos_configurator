@@ -1,6 +1,6 @@
 fe80::1%lo0	localhost
 127.0.0.1 	ocsp.apple.com
-127.0.0.1	suggest.yandex.net	   # Safari.framework
-127.0.0.1	suggestion.baidu.com	   # Safari.framework
-127.0.0.1	api.bing.com		   # Safari.framework
-127.0.0.1	sugg.search.yahoo.net	   # Safari.framework
+127.0.0.1	suggest.yandex.net
+127.0.0.1	suggestion.baidu.com
+127.0.0.1	api.bing.com
+127.0.0.1	sugg.search.yahoo.net

@@ -52,7 +52,7 @@ main() {
 			select="*"
 			;;
 		3)
-			runAsUser bash "$SCRIPT_PATH/config.sh"
+			bash "$SCRIPT_PATH/select_config.sh"
 			select="*"
 			;;
 		4)
