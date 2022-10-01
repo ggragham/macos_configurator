@@ -5,6 +5,7 @@
 trap 'errMsg' ERR
 cd "$(dirname "$0")" || exit "$?"
 
+USERNAME="$SUDO_USER"
 SCRIPT_PATH="../scripts"
 
 errMsg() {
