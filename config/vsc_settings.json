@@ -1,0 +1,24 @@
+{
+    "editor.fontFamily": "'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
+    "editor.fontSize": 14,
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontSize": 12,
+    "redhat.telemetry.enabled": false,
+    "telemetry.enableTelemetry": false,
+    "explorer.confirmDelete": false,
+    "files.associations": {
+        "*.yml": "ansible"
+    },
+    "workbench.colorTheme": "Monokai++",
+    "git.autofetch": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.titleBarStyle": "custom",
+    "window.zoomLevel": -1,
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.fontFamily": "'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
+    "[shellscript]": {
+        "editor.defaultFormatter": "mkhl.shfmt"
+    },
+    "shellformat.flag": "-i 0",
+}
