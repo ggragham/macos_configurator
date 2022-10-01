@@ -1,3 +1,4 @@
 .DS_Store
 backup/*
 !backup/README.md
+*.brewfile.lock.json

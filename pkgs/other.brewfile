@@ -1,0 +1,8 @@
+brew "ranger"
+cask "android-file-transfer"
+cask "bitwarden"
+cask "freetube"
+cask "playonmac"
+cask "spotify"
+cask "telegram"
+cask "tunelblick"
