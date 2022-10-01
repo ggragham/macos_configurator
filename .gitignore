@@ -1,4 +1,6 @@
 .DS_Store
+*.brewfile.lock.json
 backup/*
 !backup/README.md
-*.brewfile.lock.json
+ext/*
+!ext/README.md
