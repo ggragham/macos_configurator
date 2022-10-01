@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-export HOMEBREW_NO_ANALYTICS=1
 
 # Initial script.
-# Install xcode-tools, brew and ansible.
+# Install xcode-tools.
 # Clone repo and execute MacOS Configurator.
 
 trap 'errMsg' ERR
@@ -16,7 +15,7 @@ SCRIPT_NAME="install.sh"
 EXECUTE="$DEST_PATH/$REPO_NAME/$SCRIPT_NAME"
 
 errMsg() {
-	zecho "Failed"
+	echo "Failed"
 	exit 1
 }
 
@@ -53,42 +52,6 @@ installXcodeTools() {
 	fi
 }
 
-installBrew() {
-	runAsUser bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	local errcode="$?"
-	if [[ $errcode ]]; then
-		echo 'Disable Homebrew user behavior analytics'
-		command='export HOMEBREW_NO_ANALYTICS=1'
-		declare -a profile_files=("$HOME/.bash_profile" "$HOME/.zprofile")
-		for profile_file in "${profile_files[@]}"; do
-			touch "$profile_file"
-			if ! grep -q "$command" "${profile_file}"; then
-				echo "$command" >>"$profile_file"
-				echo "[$profile_file] Configured"
-			else
-				echo "[$profile_file] No need for any action, already configured"
-			fi
-		done
-		echo "Brew has been installed"
-	else
-		echo "Failed to install brew"
-		pressAnyKeyToContinue
-		exit "$errcode"
-	fi
-}
-
-installAnsible() {
-	runAsUser brew install ansible
-	local errcode="$?"
-	if [[ $errcode ]]; then
-		echo "Ansible has been installed"
-	else
-		local errcode="$?"
-		echo "Failed to isntall Ansible"
-		pressAnyKeyToContinue
-	fi
-}
-
 cloneRepo() {
 	runAsUser mkdir -p "$DEST_PATH"
 
@@ -114,10 +77,8 @@ runConfigurator() {
 main() {
 	isSudo
 	installXcodeTools
-	installBrew
-	installAnsible
-	# cloneRepo
-	# runConfigurator
+	cloneRepo
+	runConfigurator
 }
 
 main
