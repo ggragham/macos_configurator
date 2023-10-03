@@ -4,6 +4,8 @@ user: '{{ ansible_env.SUDO_USER }}'
 # Repo path
 repo_root_path: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
 ansible_path: '{{ repo_root_path }}/ansible'
+config_path: '{{ repo_root_path }}/config'
+omz_path: '{{ config_path }}/omz'
 
 # Local path
 home_path: /Users/{{ user }}

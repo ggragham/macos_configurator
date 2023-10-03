@@ -21,6 +21,55 @@
 
       tags: brew_pkgs
 
+    - name: Install and config Oh My ZSH
+      block:
+        - name: Run omz install script
+          shell:
+            cmd: >
+              curl -o- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash
+            creates: '{{ local_opt_path }}/oh-my-zsh/oh-my-zsh.sh'
+          environment:
+            ZSH: '{{ local_opt_path }}/oh-my-zsh'
+            CHSH: 'no'
+            RUNZSH: 'no'
+
+        - name: Install OMZ plugins
+          git:
+            repo: https://github.com/zsh-users/{{ item }}.git
+            dest: '{{ local_opt_path }}/oh-my-zsh/custom/plugins/{{ item }}'
+            version: master
+            update: true
+          with_items: [zsh-syntax-highlighting, zsh-autosuggestions]
+
+        - name: Config OMZ
+          block:
+            - name: Create omz config directory
+              file:
+                path: '{{ local_config_path }}/omz'
+                state: directory
+                owner: '{{ user }}'
+                mode: 0700
+            - name: Make .zshrc symlink
+              file:
+                src: '{{ omz_path }}/.zshrc'
+                dest: '{{ home_path }}/.zshrc'
+                state: link
+                force: true
+                owner: '{{ user }}'
+                mode: 0700
+            - name: Make config symlinks
+              file:
+                src: '{{ omz_path }}/{{ item }}'
+                dest: '{{ local_config_path }}/omz/{{ item }}'
+                state: link
+                force: true
+                owner: '{{ user }}'
+                mode: 0700
+              with_items: alias_zsh
+
+      become_user: '{{ user }}'
+      tags: omz
+
   become_user: '{{ user }}'
   when: ansible_os_family=="Darwin"
   tags: base_pkgs
