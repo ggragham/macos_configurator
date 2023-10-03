@@ -16,8 +16,8 @@
         line: export HOMEBREW_NO_ANALYTICS=1
         create: true
       loop:
-        - '.bash_profile'
-        - '.zprofile'
+        - .bash_profile
+        - .zprofile
 
   when: ansible_os_family=="Darwin"
   tags: brew

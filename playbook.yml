@@ -21,4 +21,4 @@
   tasks:
     - name: Install base pkgs
       include_tasks: '{{ ansible_path }}/macos_base.yml'
-      tags: "base"
+      tags: base
