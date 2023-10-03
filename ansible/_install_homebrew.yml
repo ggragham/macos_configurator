@@ -19,5 +19,5 @@
         - '.bash_profile'
         - '.zprofile'
 
-  when: ansible_distribution=="Darwin"
+  when: ansible_os_family=="Darwin"
   tags: brew

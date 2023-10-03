@@ -22,5 +22,5 @@
       tags: brew_pkgs
 
   become_user: '{{ user }}'
-  when: ansible_distribution=="Darwin"
+  when: ansible_os_family=="Darwin"
   tags: base_pkgs
