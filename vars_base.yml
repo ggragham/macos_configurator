@@ -1,0 +1,7 @@
+---
+# Repo path
+repo_root_path: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
+ansible_path: '{{ repo_root_path }}/ansible'
+
+# Local path
+home_path: /Users/{{ user }}
