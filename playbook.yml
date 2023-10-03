@@ -5,7 +5,12 @@
 
   vars_files:
     - vars_base.yml
+    - vars_pkgs.yml
+
   pre_tasks:
     - name: Install Homebrew
       include_tasks: '{{ ansible_path }}/_install_homebrew.yml'
 
+  tasks:
+    - name: Install base pkgs
+      include_tasks: '{{ ansible_path }}/macos_base.yml'

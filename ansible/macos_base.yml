@@ -1,0 +1,26 @@
+---
+- name: Install base pkgs
+  block:
+    - name: Install homebrew pkgs
+      block:
+        - name: Add taps to MacOS
+          homebrew_tap:
+            name: '{{ tap_list }}'
+            state: present
+
+        - name: Install base brew pkgs to MacOS
+          homebrew:
+            name: '{{ core_brew_list }}'
+            state: present
+            update_homebrew: true
+
+        - name: Install base cask pkgs to MacOS
+          homebrew_cask:
+            name: '{{ core_cask_list }}'
+            state: present
+
+      tags: brew_pkgs
+
+  become_user: '{{ user }}'
+  when: ansible_distribution=="Darwin"
+  tags: base_pkgs

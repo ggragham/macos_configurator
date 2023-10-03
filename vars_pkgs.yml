@@ -1,0 +1,26 @@
+---
+tap_list:
+  - dimentium/autoraise
+
+core_brew_list:
+  - autoraise
+  - bat
+  - curl
+  - exiftool
+  - htop
+  - neofetch
+  - openssl
+
+core_cask_list:
+  - android-file-transfer
+  - bitwarden
+  - brave-browser
+  - fanny
+  - freetube
+  - lulu
+  - openinterminal
+  - rectangle
+  - spotify
+  - telegram
+  - tunnelblick
+
