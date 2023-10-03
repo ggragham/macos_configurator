@@ -1,7 +1,14 @@
 ---
+user: '{{ ansible_env.SUDO_USER }}'
+
 # Repo path
 repo_root_path: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
 ansible_path: '{{ repo_root_path }}/ansible'
 
 # Local path
 home_path: /Users/{{ user }}
+local_path: '{{ home_path }}/.local'
+local_bin_path: '{{ local_path }}/bin'
+local_games_path: '{{ local_path }}/games'
+local_lib_path: '{{ local_path }}/lib'
+local_opt_path: '{{ local_path }}/opt'

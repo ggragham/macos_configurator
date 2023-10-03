@@ -1,0 +1,12 @@
+---
+- name: Crete local dirs
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ user }}'
+    mode: 0700
+  with_items:
+    - '{{ local_bin_path }}'
+    - '{{ local_games_path }}'
+    - '{{ local_lib_path }}'
+    - '{{ local_opt_path }}'
