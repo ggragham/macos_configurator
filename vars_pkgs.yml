@@ -24,3 +24,8 @@ core_cask_list:
   - telegram
   - tunnelblick
 
+script_list:
+  - gen_secret
+  - getip
+  - macspoof
+  - weather

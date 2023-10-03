@@ -70,6 +70,15 @@
       become_user: '{{ user }}'
       tags: omz
 
+    - name: Download some scripts
+      get_url:
+        url: https://raw.githubusercontent.com/ggragham/just_bunch_of_scripts/master/bin/{{ item }}
+        dest: '{{ local_bin_path }}/'
+        mode: 0700
+      with_items: '{{ script_list }}'
+
+      tags: some_scripts
+
   become_user: '{{ user }}'
   when: ansible_os_family=="Darwin"
   tags: base_pkgs
