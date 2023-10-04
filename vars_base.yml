@@ -5,6 +5,7 @@ user: '{{ ansible_env.SUDO_USER }}'
 repo_root_path: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
 ansible_path: '{{ repo_root_path }}/ansible'
 config_path: '{{ repo_root_path }}/config'
+system_conf_path: '{{ config_path }}/system_conf'
 omz_path: '{{ config_path }}/omz'
 
 # Local path
