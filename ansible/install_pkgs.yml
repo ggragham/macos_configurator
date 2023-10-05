@@ -1,42 +1,27 @@
 ---
-# Hosts
-- name: Set hosts
+- name: Install base PKGs
   block:
-    - name: Read hosts from file
-      set_fact:
-        hosts_content: "{{ lookup('file', '{{ system_conf_path }}/hosts') }}"
-
-    - name: Append hosts
-      lineinfile:
-        path: /etc/hosts
-        line: '{{ item }}'
-      loop: "{{ hosts_content.split('\n') }}"
-      when: item | trim != ''
-
-  when: ansible_os_family=="Darwin"
-  tags: hosts
-
-# Packages
-- name: Install base pkgs
-  block:
-    - name: Install homebrew pkgs
+    # Homebrew
+    - name: Install homebrew PKGs
       block:
         - name: Add taps to MacOS
           homebrew_tap:
             name: '{{ tap_list }}'
             state: present
 
-        - name: Install base brew pkgs to MacOS
+        - name: Install base brew PKGs to MacOS
           homebrew:
             name: '{{ core_brew_list }}'
             state: present
             update_homebrew: true
 
-        - name: Install base cask pkgs to MacOS
+        - name: Install base cask PKGs to MacOS
           homebrew_cask:
             name: '{{ core_cask_list }}'
             state: present
+      tags: brew
 
+    # Oh My ZSH
     - name: Install and config Oh My ZSH
       block:
         - name: Run omz install script
@@ -82,20 +67,16 @@
                 owner: '{{ user }}'
                 mode: 0700
               with_items: alias_zsh
+      tags: omz
 
+    # Download Scripts
     - name: Download some scripts
       get_url:
         url: https://raw.githubusercontent.com/ggragham/just_bunch_of_scripts/master/bin/{{ item }}
         dest: '{{ local_bin_path }}/'
         mode: 0700
       with_items: '{{ script_list }}'
+      tags: script
 
   become_user: '{{ user }}'
   when: ansible_os_family=="Darwin"
-  tags: pkgs
-
-# Local config
-- name: Apply local config
-  command: 'bash {{ script_path }}/config_local.sh'
-  become_user: '{{ user }}'
-  tags: local_config
