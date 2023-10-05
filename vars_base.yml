@@ -7,6 +7,7 @@ ansible_path: '{{ repo_root_path }}/ansible'
 config_path: '{{ repo_root_path }}/config'
 system_conf_path: '{{ config_path }}/system_conf'
 omz_path: '{{ config_path }}/omz'
+script_path: '{{ repo_root_path }}/scripts'
 
 # Local path
 home_path: /Users/{{ user }}

@@ -93,3 +93,9 @@
   become_user: '{{ user }}'
   when: ansible_os_family=="Darwin"
   tags: pkgs
+
+# Local config
+- name: Apply local config
+  command: 'bash {{ script_path }}/config_local.sh'
+  become_user: '{{ user }}'
+  tags: local_config
