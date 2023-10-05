@@ -1,6 +1,16 @@
 ---
 - name: Config MacOS
-  block:
+  hosts: all
+  become: true
+
+  vars_files:
+    - _vars_base.yml
+
+  pre_tasks:
+    - name: Create local dirs
+      include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+
+  tasks:
     # Hosts
     - name: Set hosts
       block:
@@ -14,12 +24,14 @@
             line: '{{ item }}'
           loop: "{{ hosts_content.split('\n') }}"
           when: item | trim != ''
+
+      when: ansible_os_family=="Darwin"
       tags: hosts
 
     # Local config
     - name: Apply local config
       command: bash {{ script_path }}/config_local.sh
-      become_user: '{{ user }}'
-      tags: local_config
 
-  when: ansible_os_family=="Darwin"
+      become_user: '{{ user }}'
+      when: ansible_os_family=="Darwin"
+      tags: local_config

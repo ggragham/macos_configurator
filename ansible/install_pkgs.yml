@@ -1,6 +1,22 @@
 ---
-- name: Install base PKGs
-  block:
+- name: Install PKGs to MacOS
+  hosts: all
+  become: true
+
+  vars_files:
+    - _vars_base.yml
+    - _vars_pkgs.yml
+
+  pre_tasks:
+    - name: Preparatory steps
+      block:
+        - name: Install Homebrew
+          include_tasks: '{{ ansible_path }}/_install_homebrew.yml'
+
+        - name: Create local dirs
+          include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+
+  tasks:
     # Homebrew
     - name: Install homebrew PKGs
       block:
@@ -19,6 +35,9 @@
           homebrew_cask:
             name: '{{ core_cask_list }}'
             state: present
+
+      become_user: '{{ user }}'
+      when: ansible_os_family=="Darwin"
       tags: brew
 
     # Oh My ZSH
@@ -67,6 +86,9 @@
                 owner: '{{ user }}'
                 mode: 0700
               with_items: alias_zsh
+
+      become_user: '{{ user }}'
+      when: ansible_os_family=="Darwin"
       tags: omz
 
     # Download Scripts
@@ -76,7 +98,7 @@
         dest: '{{ local_bin_path }}/'
         mode: 0700
       with_items: '{{ script_list }}'
-      tags: script
 
-  become_user: '{{ user }}'
-  when: ansible_os_family=="Darwin"
+      become_user: '{{ user }}'
+      when: ansible_os_family=="Darwin"
+      tags: script
