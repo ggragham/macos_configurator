@@ -1,5 +1,5 @@
 ---
-# Set hosts
+# Hosts
 - name: Set hosts
   block:
     - name: Read hosts from file
@@ -36,8 +36,6 @@
           homebrew_cask:
             name: '{{ core_cask_list }}'
             state: present
-
-      tags: brew_pkgs
 
     - name: Install and config Oh My ZSH
       block:
@@ -85,9 +83,6 @@
                 mode: 0700
               with_items: alias_zsh
 
-      become_user: '{{ user }}'
-      tags: omz
-
     - name: Download some scripts
       get_url:
         url: https://raw.githubusercontent.com/ggragham/just_bunch_of_scripts/master/bin/{{ item }}
@@ -95,8 +90,6 @@
         mode: 0700
       with_items: '{{ script_list }}'
 
-      tags: some_scripts
-
   become_user: '{{ user }}'
   when: ansible_os_family=="Darwin"
-  tags: base_pkgs
+  tags: pkgs
