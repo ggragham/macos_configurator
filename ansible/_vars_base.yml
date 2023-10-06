@@ -10,6 +10,7 @@ user_conf_path: '{{ config_path }}/local_conf'
 system_conf_path: '{{ config_path }}/system_conf'
 omz_path: '{{ config_path }}/omz'
 script_path: '{{ repo_root_path }}/scripts'
+plist_script_path: '{{ script_path }}/plists'
 
 # Local path
 home_path: /Users/{{ user }}
