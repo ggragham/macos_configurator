@@ -28,10 +28,68 @@
       when: ansible_os_family=="Darwin"
       tags: hosts
 
-    # Local config
-    - name: Apply local config
+    # Local config script
+    - name: Run local config script
       command: bash {{ script_path }}/config_local.sh
 
       become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
-      tags: local_config
+      tags: local_config_script
+
+    # Local config files
+    - name: Apply config files
+      block:
+        - name: Create config and backup dir
+          file:
+            path: '{{ item }}'
+            state: directory
+          with_items:
+            - '{{ local_config_path }}'
+            - '{{ backup_path }}'
+
+        - name: Make dirs and files list
+          find:
+            paths: '{{ user_conf_path }}/.config'
+            recurse: true
+            file_type: any
+          register: item_list
+
+        - name: Make backup
+          block:
+            - name: Get current timestamp
+              set_fact:
+                current_timestamp: "{{ lookup('pipe', 'date \"+%d_%m_%Y_%H_%M_%S\"') }}"
+            - name: Create backup dirs
+              file:
+                path: '{{ backup_path }}/backup_{{ current_timestamp }}/{{ item.path | regex_replace(user_conf_path + "/.config/",
+                  "") }}'
+                state: directory
+              loop: '{{ item_list.files }}'
+              when: item.isdir
+            - name: Create backup
+              copy:
+                src: '{{ local_config_path }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+                dest: '{{ backup_path }}/backup_{{ current_timestamp }}/{{ item.path | regex_replace(user_conf_path + "/.config/",
+                  "") }}'
+              loop: '{{ item_list.files }}'
+              when: item.isreg
+
+        - name: Create destination dirs
+          file:
+            path: '{{ local_config_path }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+            state: directory
+          loop: '{{ item_list.files }}'
+          when: item.isdir
+
+        - name: Create config symlinks
+          file:
+            src: '{{ item.path }}'
+            dest: '{{ local_config_path }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+            state: link
+            force: true
+          loop: '{{ item_list.files }}'
+          when: item.isreg
+
+      become_user: '{{ user }}'
+      when: ansible_os_family=="Darwin"
+      tags: local_config_files
