@@ -1,4 +1,4 @@
-#AutoRaise config file
+# AutoRaise config file
 delay=3
 focusDelay=2
 warpX=0.5
