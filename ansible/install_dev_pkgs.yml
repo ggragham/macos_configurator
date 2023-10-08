@@ -24,6 +24,8 @@
           become_user: '{{ user }}'
           when: ansible_os_family=="Darwin"
 
+      tags: prepare
+
   tasks:
     # Base DevOps PKGs
     - name: Install base DevOps PKGs to MacOS

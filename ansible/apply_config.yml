@@ -7,8 +7,12 @@
     - _vars_base.yml
 
   pre_tasks:
-    - name: Create local dirs
-      include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+    - name: Preparatory steps
+      block:
+        - name: Create local dirs
+          include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+
+      tags: prepare
 
   tasks:
     # Hosts
