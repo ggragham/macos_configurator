@@ -1,0 +1,40 @@
+---
+- name: Install pkg from github releases
+  block:
+    - name: Get latest release info
+      uri:
+        url: https://api.github.com/repos/{{ github_username }}/{{ github_reponame }}/releases/latest
+        return_content: true
+        headers:
+          Accept: application/vnd.github.v3+json
+      register: json_response
+
+    - name: Find the URL for the {{ github_reponame }}_{{ arch_type }}.{{ extension }} release
+      set_fact:
+        release_url: '{{ item.browser_download_url }}'
+      when: item.name.startswith(artifact_name) and item.name.endswith('_' + arch_type + '.' + extension)
+      with_items: '{{ json_response.json.assets }}'
+
+    - name: Make tmp directory
+      file:
+        path: /tmp/{{ github_reponame }}
+        state: directory
+
+    - name: Download {{ github_reponame }}
+      unarchive:
+        src: '{{ release_url }}'
+        dest: /tmp/{{ github_reponame }}
+        remote_src: true
+
+    - name: Install {{ pkg_name }}
+      copy:
+        src: /tmp/{{ github_reponame }}/{{ pkg_name }}
+        dest: '{{ local_bin_path }}/{{ pkg_name }}'
+        mode: 0700
+
+    - name: Remove tmp directory
+      file:
+        path: /tmp/{{ github_reponame }}
+        state: absent
+
+  become_user: '{{ user }}'

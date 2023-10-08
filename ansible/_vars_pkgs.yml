@@ -1,5 +1,5 @@
 ---
-tap_list:
+core_tap_list:
   - dimentium/autoraise
 
 core_brew_list:
@@ -29,3 +29,36 @@ script_list:
   - getip
   - macspoof
   - weather
+
+devops_tap_list:
+  - warrensbox/tap
+
+devops_brew_list:
+  - awscli
+  - tfswitch
+
+virt_list:
+  - virtualbox
+  - vagrant
+
+pyenv_build_deps:
+  - openssl
+  - readline
+  - sqlite3
+  - tcl-tk
+  - xz
+  - zlib
+
+vscode_extensions:
+  - Gruntfuggly.todo-tree
+  - MattiasBaake.vscode-snippets-for-ansible
+  - PKief.material-icon-theme
+  - dcasella.monokai-plusplus
+  - foxundermoon.shell-format
+  - jeff-hykin.better-shellscript-syntax
+  - lonefy.vscode-JS-CSS-HTML-formatter
+  - mads-hartmann.bash-ide-vscode
+  - redhat.vscode-yaml
+  - timonwong.shellcheck
+  - vscodevim.vim
+  - wholroyd.jinja

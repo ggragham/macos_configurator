@@ -4,3 +4,6 @@
 
 - name: Apply config
   import_playbook: ./ansible/apply_config.yml
+
+- name: Install Dev PKGs
+  import_playbook: ./ansible/install_dev_pkgs.yml
