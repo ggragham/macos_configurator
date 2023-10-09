@@ -2,21 +2,23 @@
     "editor.fontFamily": "'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
     "editor.fontSize": 14,
     "editor.fontLigatures": true,
+    "editor.insertSpaces": false,
+    "editor.renderWhitespace": "boundary",
+    "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.fontSize": 12,
+    "terminal.integrated.defaultProfile.osx": "zsh",
     "redhat.telemetry.enabled": false,
     "telemetry.enableTelemetry": false,
+    "telemetry.telemetryLevel": "off",
     "explorer.confirmDelete": false,
     "files.associations": {
-        "*.yml": "ansible"
+        "*.yml": "yaml"
     },
     "workbench.colorTheme": "Monokai++",
-    "git.autofetch": true,
     "workbench.iconTheme": "material-icon-theme",
+    "git.autofetch": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "window.titleBarStyle": "custom",
-    "window.zoomLevel": -1,
-    "terminal.integrated.defaultProfile.osx": "zsh",
-    "terminal.integrated.fontFamily": "'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
     "[shellscript]": {
         "editor.defaultFormatter": "mkhl.shfmt"
     },

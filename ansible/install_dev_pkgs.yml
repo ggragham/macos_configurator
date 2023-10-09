@@ -68,6 +68,13 @@
             cmd: codium --install-extension {{ item }}
           with_items: '{{ vscode_extensions }}'
 
+        - name: Apply VSCodium config
+          file:
+            src: '{{ user_conf_path }}/vsc_settings.json'
+            dest: '{{ home_path }}/Library/Application Support/VSCodium/User/settings.json'
+            state: link
+            force: true
+
       become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: vscodium
