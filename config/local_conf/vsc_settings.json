@@ -20,7 +20,7 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "window.titleBarStyle": "custom",
     "[shellscript]": {
-        "editor.defaultFormatter": "mkhl.shfmt"
+        "editor.defaultFormatter": "foxundermoon.shell-format"
     },
     "shellformat.flag": "-i 0",
 }
