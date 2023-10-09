@@ -1,7 +1,9 @@
 ---
-# core_tap_list:
+core_tap_list:
+  - dimentium/autoraise
 
 core_brew_list:
+  - autoraise
   - bat
   - curl
   - exiftool
