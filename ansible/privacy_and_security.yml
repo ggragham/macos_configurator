@@ -1,0 +1,20 @@
+---
+- name: Install PKGs to MacOS
+  hosts: all
+  become: true
+
+  vars_files:
+    - _vars_base.yml
+
+  tasks:
+    - name: Cleanup
+      block:
+        - name: System Cleanup
+          command: bash {{ script_path }}/cleanup_system.sh
+
+        - name: Local Cleanup
+          command: bash {{ script_path }}/cleanup_local.sh
+          become_user: '{{ user }}'
+
+      when: ansible_os_family=="Darwin"
+      tags: cleanup

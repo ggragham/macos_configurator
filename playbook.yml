@@ -7,3 +7,6 @@
 
 - name: Install Dev PKGs
   import_playbook: ./ansible/install_dev_pkgs.yml
+
+- name: Privacy and Security
+  import_playbook: ./ansible/privacy_and_security.yml
