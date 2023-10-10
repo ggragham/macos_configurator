@@ -17,6 +17,7 @@ core_cask_list:
   - brave-browser
   - fanny
   - freetube
+  - kitty
   - lulu
   - openinterminal
   - rectangle
