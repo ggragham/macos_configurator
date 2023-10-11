@@ -22,10 +22,10 @@
     # Homebrew
     - name: Install homebrew PKGs
       block:
-        - name: Add taps to MacOS
-          homebrew_tap:
-            name: '{{ core_tap_list }}'
-            state: present
+        # - name: Add taps to MacOS
+        #   homebrew_tap:
+        #     name: '{{ core_tap_list }}'
+        #     state: present
 
         - name: Install base brew PKGs to MacOS
           homebrew:
@@ -37,6 +37,21 @@
           homebrew_cask:
             name: '{{ core_cask_list }}'
             state: present
+
+        # AutoRaise
+        - name: AutoRaise
+          block:
+            - name: Add dimentium tap
+              homebrew_tap:
+                name: dimentium/autoraise
+                state: present
+            - name: Install AutoRaise
+              homebrew:
+                name: autoraise
+                install_options: with-dexperimental_focus_first
+                state: present
+                update_homebrew: true
+          tags: autoraise
 
       become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
