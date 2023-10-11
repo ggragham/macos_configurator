@@ -17,5 +17,3 @@ if [[ -d "$OMZ_CONFIG_PATH" ]]; then
 fi
 
 source "$ZSH/oh-my-zsh.sh"
-clear
-
