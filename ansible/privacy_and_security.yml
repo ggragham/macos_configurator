@@ -7,6 +7,24 @@
     - _vars_base.yml
 
   tasks:
+    # Hosts
+    - name: Set hosts
+      block:
+        - name: Read hosts from file
+          set_fact:
+            hosts_content: "{{ lookup('file', '{{ system_conf_path }}/hosts') }}"
+
+        - name: Append hosts
+          lineinfile:
+            path: /etc/hosts
+            line: '{{ item }}'
+          loop: "{{ hosts_content.split('\n') }}"
+          when: item | trim != ''
+
+      when: ansible_os_family=="Darwin"
+      tags: hosts
+
+    # Cleanup
     - name: Cleanup
       block:
         - name: System Cleanup
