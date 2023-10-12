@@ -81,12 +81,19 @@
       when: ansible_os_family=="Darwin"
       tags: local_config_files
 
-    # Apps plist sripts
-    - name: Config apps plists
+    # Per-App config
+    - name: Per-App config
       block:
         - name: Rectangle
-          command: bash {{ plist_script_path }}/com.knollsoft.Rectangle.sh
+          block:
+            - name: Check Rectangle existence
+              stat:
+                path: /Applications/Rectangle.app
+              register: rectangle_exist
+            - name: Apply Rectangle config
+              command: bash {{ plist_script_path }}/com.knollsoft.Rectangle.sh
+              when: rectangle_exist.stat.exists
 
       become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
-      tags: apps_plist
+      tags: app_config
