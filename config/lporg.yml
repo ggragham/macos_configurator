@@ -1,0 +1,122 @@
+apps:
+  pages:
+    - number: 1
+      items:
+        - folder: Defaults
+          pages:
+            - number: 1
+              items:
+                - Mail
+                - Contacts
+                - FaceTime
+                - Messages
+                - Maps
+                - Find My
+                - Photo Booth
+                - Preview
+                - Music
+                - Podcasts
+                - TV
+                - Voice Memos
+                - Weather
+                - Stocks
+                - Books
+                - Dictionary
+                - Freeform
+                - Home
+                - Clock
+                - Siri
+        - folder: Other
+          pages:
+            - number: 1
+              items:
+                - Shortcuts
+                - QuickTime Player
+                - TextEdit
+                - Grapher
+                - Time Machine
+                - Font Book
+                - Mission Control
+                - Chess
+                - Stickies
+                - Image Capture
+                - VoiceOver Utility
+                - AirPort Utility
+                - Migration Assistant
+                - Terminal
+                - Activity Monitor
+                - Console
+                - Keychain Access
+                - System Information
+                - Automator
+                - Script Editor
+                - Disk Utility
+                - Boot Camp Assistant
+                - Digital Colour Meter
+                - ColorSync Utility
+                - Screenshot
+                - Bluetooth File Exchange
+                - Audio MIDI Setup
+        - folder: Utilities
+          pages:
+            - number: 1
+              items:
+                - ueli
+                - OpenInTerminal
+                - Rectangle
+                - LuLu
+                - Fanny
+                - AppCleaner
+                - Tunnelblick
+        - System Settings
+        - App Store
+        - Safari
+        - Calendar
+        - Reminders
+        - Notes
+        - Photos
+        - Calculator
+        - ONLYOFFICE
+        - Android File Transfer
+        - Brave Browser
+        - Telegram
+        - Spotify
+        - FreeTube
+        - Bitwarden
+        - Slack
+        - VirtualBox
+        - kitty
+        - Docker
+        - VSCodium
+widgets:
+  pages: []
+dock_items:
+  apps:
+    - /System/Applications/Launchpad.app
+    - /Applications/kitty.app
+    - /System/Applications/System Settings.app
+    - /System/Applications/Calculator.app
+    - /System/Applications/Calendar.app
+    - /System/Applications/Reminders.app
+    - /System/Applications/Notes.app
+    - /Applications/Docker.app
+    - /Applications/VSCodium.app
+    - /Applications/Spotify.app
+    - /Applications/FreeTube.app
+    - /Applications/Telegram.app
+    - /Applications/Slack.app
+    - /Applications/Bitwarden.app
+    - /Applications/Brave Browser.app
+  others:
+    - path: ~/Downloads
+      view: 1
+      sort: 2
+  settings:
+    autohide: false
+    largesize: 70
+    magnification: true
+    minimize-to-application: false
+    mru-spaces: false
+    show-recents: false
+    tilesize: 54
+desktop: {}

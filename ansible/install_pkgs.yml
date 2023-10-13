@@ -21,10 +21,10 @@
     # Homebrew
     - name: Install homebrew PKGs
       block:
-        # - name: Add taps to MacOS
-        #   homebrew_tap:
-        #     name: '{{ core_tap_list }}'
-        #     state: present
+        - name: Add taps to MacOS
+          homebrew_tap:
+            name: '{{ core_tap_list }}'
+            state: present
 
         - name: Install base brew PKGs to MacOS
           homebrew:

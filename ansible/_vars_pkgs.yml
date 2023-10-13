@@ -1,11 +1,13 @@
 ---
-# core_tap_list:
+core_tap_list:
+  - blacktop/tap
 
 core_brew_list:
   - bat
   - curl
   - exiftool
   - htop
+  - lporg
   - neofetch
   - openssl
 

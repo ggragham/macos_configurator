@@ -104,6 +104,15 @@
                 mode: '0666'
               when: ueli_exist.stat.exists
 
+        - name: lporg
+          block:
+            - name: Check lporg existence
+              stat:
+                path: /usr/local/bin/lporg
+              register: lporg_exist
+            - name: Apply lporg config
+              shell: lporg load -n -y -c {{ config_path }}/lporg.yml
+              when: lporg_exist.stat.exists
 
       when: ansible_os_family=="Darwin"
       tags: app_config
