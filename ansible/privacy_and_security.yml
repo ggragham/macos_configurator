@@ -36,3 +36,16 @@
 
       when: ansible_os_family=="Darwin"
       tags: cleanup
+
+    # Security
+    - name: Security
+      block:
+        - name: System Security
+          command: bash {{ script_path }}/security_system.sh
+          become: true
+
+        - name: Local Security
+          command: bash {{ script_path }}/security_local.sh
+
+      when: ansible_os_family=="Darwin"
+      tags: security
