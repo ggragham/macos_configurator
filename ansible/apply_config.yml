@@ -94,6 +94,19 @@
               command: bash {{ plist_script_path }}/com.knollsoft.Rectangle.sh
               when: rectangle_exist.stat.exists
 
+        - name: ueli
+          block:
+            - name: Check ueli existence
+              stat:
+                path: /Applications/ueli.app
+              register: ueli_exist
+            - name: Apply ueli config
+              copy:
+                src: '{{ config_path }}/ueli.config.json'
+                dest: '{{ home_path }}/Library/Application Support/ueli/config.json'
+                mode: '0666'
+              when: ueli_exist.stat.exists
+
       become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: app_config

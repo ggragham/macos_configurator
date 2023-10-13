@@ -22,6 +22,7 @@ core_cask_list:
   - spotify
   - telegram
   - tunnelblick
+  - ueli
 
 script_list:
   - gen_secret
