@@ -49,3 +49,16 @@
 
       when: ansible_os_family=="Darwin"
       tags: security
+
+    # Privacy
+    - name: Privacy
+      block:
+        - name: System Privacy
+          command: bash {{ script_path }}/privacy_system.sh
+          become: true
+
+        - name: Local Privacy
+          command: bash {{ script_path }}/privacy_local.sh
+
+      when: ansible_os_family=="Darwin"
+      tags: privacy
