@@ -1,7 +1,6 @@
 ---
 - name: Install PKGs to MacOS
   hosts: all
-  become: true
 
   vars_files:
     - _vars_base.yml
@@ -53,7 +52,6 @@
                 update_homebrew: true
           tags: autoraise
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: brew
 
@@ -104,7 +102,6 @@
                 mode: 0700
               with_items: alias_zsh
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: omz
 
@@ -116,6 +113,5 @@
         mode: 0700
       with_items: '{{ script_list }}'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: script

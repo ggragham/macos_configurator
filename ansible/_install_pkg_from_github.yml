@@ -36,5 +36,3 @@
       file:
         path: /tmp/{{ github_reponame }}
         state: absent
-
-  become_user: '{{ user }}'

@@ -12,4 +12,3 @@
     force: true
     owner: '{{ user }}'
   when: zsh_exist.stat.exists
-  become_user: '{{ user }}'

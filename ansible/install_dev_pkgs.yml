@@ -1,7 +1,6 @@
 ---
 - name: Install dev PKGs to MacOS
   hosts: all
-  become: true
 
   vars_files:
     - _vars_base.yml
@@ -21,7 +20,6 @@
             name: gnu-tar
             state: present
             update_homebrew: true
-          become_user: '{{ user }}'
           when: ansible_os_family=="Darwin"
 
       tags: prepare
@@ -50,7 +48,6 @@
             - name: Apply {{ omz_config_name }}_zsh config
               include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: devops
 
@@ -75,7 +72,6 @@
             state: link
             force: true
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: vscodium
 
@@ -96,7 +92,6 @@
             - name: Apply {{ omz_config_name }}_zsh config
               include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: virtualization
 
@@ -117,7 +112,6 @@
             - name: Apply {{ omz_config_name }}_zsh config
               include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: docker
 
@@ -175,7 +169,6 @@
             - name: Apply {{ omz_config_name }}_zsh config
               include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: kubernetes
 
@@ -194,7 +187,6 @@
             creates: '{{ local_opt_path }}/pyenv/bin/pyenv'
           environment:
             PYENV_ROOT: '{{ local_opt_path }}/pyenv'
-          become_user: '{{ user }}'
 
         - name: Apply PyEnv zsh config
           block:
@@ -204,7 +196,6 @@
             - name: Apply {{ omz_config_name }}_zsh config
               include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: pyenv
 
@@ -224,7 +215,6 @@
             creates: '{{ local_opt_path }}/nvm/nvm.sh'
           environment:
             NVM_DIR: '{{ local_opt_path }}/nvm'
-          become_user: '{{ user }}'
 
         - name: Apply NVM zsh config
           block:
@@ -234,6 +224,5 @@
             - name: Apply {{ omz_config_name }}_zsh config
               include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
 
-      become_user: '{{ user }}'
       when: ansible_os_family=="Darwin"
       tags: nvm
