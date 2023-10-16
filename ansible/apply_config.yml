@@ -114,6 +114,16 @@
                 mode: '0666'
               when: ueli_exist.stat.exists
 
+        - name: OpenInTerminal
+          block:
+            - name: Check OpenInTerminal existence
+              stat:
+                path: /Applications/OpenInTerminal.app
+              register: openinterminal_exist
+            - name: Apply OpenInTerminal config
+              command: bash {{ plist_script_path }}/wang.jianing.app.OpenInTerminal.sh
+              when: openinterminal_exist.stat.exists
+
       when: ansible_os_family=="Darwin"
       tags: app_config
 
