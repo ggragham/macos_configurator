@@ -14,7 +14,7 @@
     "files.associations": {
         "*.yml": "yaml"
     },
-    "workbench.colorTheme": "Monokai++",
+    "workbench.colorTheme": "Monokai++ Unified",
     "workbench.iconTheme": "material-icon-theme",
     "git.autofetch": true,
     "diffEditor.ignoreTrimWhitespace": false,
