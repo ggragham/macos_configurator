@@ -9,9 +9,6 @@
   pre_tasks:
     - name: Preparatory steps
       block:
-        - name: Install Homebrew
-          include_tasks: '{{ ansible_path }}/_install_homebrew.yml'
-
         - name: Create local dirs
           include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
 
