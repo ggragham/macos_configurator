@@ -46,22 +46,50 @@ pressAnyKeyToContinue() {
 }
 
 installInitDeps() {
-	if [[ "$CURRENT_PLATFORM" == "Darwin" ]]; then
-		if ! brew --version 2>/dev/null 1>&2; then
-			runAsUser NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-			echo "Brew installation complete"
-		fi
+	createTmpDir() {
+		tmpDir="$(runAsUser mktemp -d)"
+	}
 
-		if ! ansible --version 2>/dev/null 1>&2; then
+	deleteTmpDir() {
+		if [ -n "$tmpDir" ] && [ -d "$tmpDir" ]; then
+			rm -rf "$tmpDir"
+		fi
+	}
+
+	trap deleteTmpDir EXIT INT
+
+	if [[ "$CURRENT_PLATFORM" != "Darwin" ]]; then
+		echo -e "Platform ${BOLD}$CURRENT_PLATFORM${NORMAL} is not supported"
+		exit 1
+	fi
+
+	if ! brew --version 2>/dev/null 1>&2; then
+		createTmpDir
+		local brewInstallPath="$tmpDir/brew_install.sh"
+
+		(
+			set -e
+			echo "Installing Homebrew..."
+			runAsUser curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$brewInstallPath"
+			runAsUser NONINTERACTIVE=1 /bin/bash "$brewInstallPath"
+		) || {
+			echo "Failed to install Homebrew. Exiting..."
+			exit 2
+		}
+		echo "Brew installation complete"
+	fi
+
+	if ! ansible --version 2>/dev/null 1>&2; then
+		(
+			set -e
+			echo "Installing Ansible..."
 			runAsUser brew update
 			runAsUser brew install ansible
-			echo "Ansible installation complete"
-		fi
-
-		return 0
-	else
-		echo "Platform $CURRENT_PLATFORM is not supported"
-		exit 1
+		) || {
+			echo "Failed to install Ansible. Exiting..."
+			exit 2
+		}
+		echo "Ansible installation complete"
 	fi
 }
 
