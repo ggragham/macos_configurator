@@ -85,7 +85,7 @@ apps:
         - Bitwarden
         - Slack
         - VirtualBox
-        - kitty
+        - iTerm
         - Docker
         - VSCodium
 widgets:
@@ -93,7 +93,7 @@ widgets:
 dock_items:
   apps:
     - /System/Applications/Launchpad.app
-    - /Applications/kitty.app
+    - /Applications/iTerm.app
     - /System/Applications/System Settings.app
     - /System/Applications/Calculator.app
     - /System/Applications/Calendar.app
