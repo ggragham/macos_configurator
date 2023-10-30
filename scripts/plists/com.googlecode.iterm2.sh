@@ -36,3 +36,8 @@ defaults write com.googlecode.iterm2 HideScrollbar 1
 	-c "Add :New\ Bookmarks:0:Keyboard\ Map:0xf703\-0x280000-0x0:Text string f" \
 	-c "Add :New\ Bookmarks:0:Keyboard\ Map:0xf703\-0x280000-0x0:Action string 10" \
 	"$HOME/Library/Preferences/com.googlecode.iterm2.plist"
+
+# Pointer > Three-finger tap emulates middle click [Enabled]
+defaults write com.googlecode.iterm2 ThreeFingerEmulates 1
+# Pointer > Focus follows mouse [Enabled]
+defaults write com.googlecode.iterm2 FocusFollowsMouse 1
