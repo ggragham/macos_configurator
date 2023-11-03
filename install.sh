@@ -309,7 +309,7 @@ applyConfig() {
 
 		case $select in
 		1)
-			configAnsiblePlaybook "local_config_script"
+			configAnsiblePlaybook "config_script"
 			pressAnyKeyToContinue
 			select="*"
 			;;

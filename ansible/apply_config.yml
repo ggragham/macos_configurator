@@ -14,12 +14,18 @@
       tags: prepare
 
   tasks:
-    # Local config script
-    - name: Run local config script
-      command: bash {{ script_path }}/config_local.sh
+    # Config script
+    - name: Config Script
+      block:
+        - name: Run system config script
+          command: bash {{ script_path }}/config_system.sh
+          become: true
+
+        - name: Run local config script
+          command: bash {{ script_path }}/config_local.sh
 
       when: ansible_os_family=="Darwin"
-      tags: local_config_script
+      tags: config_script
 
     # Local config files
     - name: Apply config files
