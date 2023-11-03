@@ -7,7 +7,6 @@ ZSH_THEME="robbyrussell"
 COMPLETION_WAITING_DOTS="true"
 OMZ_CONFIG_PATH="$HOME/.config/omz"
 
-bindkey -s "^[OM" "^M"
 plugins=(git compleat cp zsh-syntax-highlighting zsh-autosuggestions colored-man-pages)
 
 if [[ -d "$OMZ_CONFIG_PATH" ]]; then
