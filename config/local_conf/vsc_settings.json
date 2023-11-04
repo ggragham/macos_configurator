@@ -17,6 +17,7 @@
     "workbench.colorTheme": "Monokai++ Unified",
     "workbench.iconTheme": "material-icon-theme",
     "git.autofetch": true,
+    "git.defaultBranchName": "master",
     "diffEditor.ignoreTrimWhitespace": false,
     "window.titleBarStyle": "custom",
     "[shellscript]": {
