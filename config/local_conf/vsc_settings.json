@@ -23,4 +23,14 @@
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
     "shellformat.flag": "-i 0",
+    "spellright.language": [
+        "en",
+        "uk",
+        "ru"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ]
 }

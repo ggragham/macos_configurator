@@ -51,6 +51,7 @@ pyenv_build_deps:
   - zlib
 
 vscode_extensions:
+  - ban.spellright
   - Gruntfuggly.todo-tree
   - MattiasBaake.vscode-snippets-for-ansible
   - PKief.material-icon-theme
