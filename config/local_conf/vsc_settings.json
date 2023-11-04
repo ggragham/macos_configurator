@@ -1,10 +1,10 @@
 {
-    "editor.fontFamily": "'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
+    "editor.fontFamily": "'Comic Code', 'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
     "editor.fontSize": 14,
     "editor.fontLigatures": true,
     "editor.insertSpaces": false,
     "editor.renderWhitespace": "boundary",
-    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.fontFamily": "'Comic Code', 'JetBrains Mono', monospace",
     "terminal.integrated.fontSize": 12,
     "terminal.integrated.defaultProfile.osx": "zsh",
     "redhat.telemetry.enabled": false,
