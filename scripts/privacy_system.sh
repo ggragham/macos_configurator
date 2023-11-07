@@ -41,3 +41,7 @@ echo '--- Set generic NTP server'
 systemsetup -setusingnetworktime off
 systemsetup -setnetworktimeserver pool.ntp.org
 systemsetup -setusingnetworktime on
+
+# Disable com.apple.rtcreportingd
+launchctl disable system/com.apple.rtcreportingd
+launchctl bootout system/com.apple.rtcreportingd
