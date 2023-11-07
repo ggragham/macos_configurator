@@ -13,7 +13,7 @@ core_brew_list:
 
 core_cask_list:
   - android-file-transfer
-  - bitwarden
+  # - bitwarden
   - brave-browser
   - fanny
   - freetube
@@ -21,7 +21,7 @@ core_cask_list:
   - lulu
   - openinterminal
   - rectangle
-  - telegram
+  # - telegram
   - tunnelblick
   - ueli
 
