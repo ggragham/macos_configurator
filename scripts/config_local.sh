@@ -189,14 +189,62 @@ defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 0
 defaults write NSGlobalDomain com.apple.mouse.scaling -float 0.875
 
 # ----------------------------------------------------------
+# ------------------ System Apps Settings ------------------
+# ----------------------------------------------------------
 
-# Set visible files extensions
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-
-# Finder quiet
+##############
+### Finder ###
+##############
+# Finder: allow exit
 defaults write com.apple.finder "QuitMenuItem" -bool true
-
-# Path bar
+# Finder: show pathbar
 defaults write com.apple.finder "ShowPathbar" -bool true
+# Set $HOME as the default location for new Finder windows
+# For other paths, use `PfLo` and `file:///full/path/here/`
+defaults write com.apple.finder NewWindowTarget -string "PfHm"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+# Show icons for hard drives, servers, and removable media on the desktop
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+# Finder: allow exit
+defaults write com.apple.finder "QuitMenuItem" -bool true
+# Finder: show pathbar
+defaults write com.apple.finder "ShowPathbar" -bool true
+# Finder: show all filename extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# Finder: allow text selection in Quick Look
+defaults write com.apple.finder QLEnableTextSelection -bool true
+# Display full POSIX path as Finder window title
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+# When performing a search, search the current folder by default
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+# Hide recent tags
+defaults write com.apple.finder ShowRecentTags -bool false
+# Keep folders on top when sorting
+defaults write com.apple.finder "_FXSortFoldersFirst" -bool true
+defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool true
+# Avoid creating .DS_Store files on network volumes
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+# Enable snap-to-grid for icons on the desktop and in other icon views
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+# Set the size of icons on the desktop and in other icon views
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:iconSize 64" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:iconSize 64" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:iconSize 64" ~/Library/Preferences/com.apple.finder.plist
 
-# TODO
+###################
+### Screenshots ###
+###################
+# Save screenshots to ~/Pictures/Screenshots directory
+mkdir -p "${HOME}/Pictures/Screenshots"
+defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screenshots"
+
+#################
+### App Store ###
+#################
+# Disable in-app rating requests from apps downloaded from the App Store.
+defaults write com.apple.appstore InAppReviewEnabled -int 0
