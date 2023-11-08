@@ -113,10 +113,10 @@ dock_items:
       sort: 2
   settings:
     autohide: false
-    largesize: 70
+    largesize: 80
     magnification: true
     minimize-to-application: false
     mru-spaces: false
     show-recents: false
-    tilesize: 54
+    tilesize: 60
 desktop: {}
