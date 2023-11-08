@@ -1,6 +1,6 @@
 # AutoRaise config file
-delay=3
-focusDelay=2
+delay=0
+focusDelay=3
 warpX=0.5
 warpY=0.1
 scale=2.5
