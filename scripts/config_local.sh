@@ -104,10 +104,10 @@ defaults write com.apple.dock largesize -int 80
 defaults write com.apple.dock show-recents -bool false
 # Hot Corners > Top Left [Mission Control]
 defaults write com.apple.dock wvous-tl-corner -int 2
-defaults write com.apple.dock wvous-tl-modifier 0
+defaults write com.apple.dock wvous-tl-modifier -int 0
 # Hot Corners > Bottom Right [-]
 defaults write com.apple.dock wvous-br-corner -int 0
-defaults write com.apple.dock wvous-br-modifier 0
+defaults write com.apple.dock wvous-br-modifier -int 0
 # Restart dock
 killall Dock
 
