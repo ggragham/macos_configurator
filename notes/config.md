@@ -38,3 +38,31 @@ I don't use Apple's built-in password manager, so I prefer to disable all settin
 ### Keyboard
 Here I just want to configure the keyboard backlight to turn off after N seconds of inactivity to reduce battery drain.
 * Turn keyboard backlight off after inactivity [After N Seconds/Minute(s)]
+
+## Finder Settings
+Change icons in the Finder Sidebar
+* Sidebar
+	* Favourites
+		* [x] Recents
+		* [x] Airdrop
+		* [x] Applications
+		* [x] Desktop
+		* [x] Documents
+		* [x] Downloads
+		* [ ] Movies
+		* [ ] Music
+		* [x] Pictures
+		* [x] Home
+
+	* Locations
+		* [ ] iCloud Drive
+		* [x] MacBook
+		* [x] Hard disks
+		* [x] External disks
+		* [x] CDs, DVDs and iOS Devices
+		* [x] Cloud Storage
+		* [ ] Bonjour computers
+		* [x] Connected servers
+
+	* Tags
+		* [ ] Recent Tags
