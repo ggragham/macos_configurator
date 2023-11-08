@@ -302,7 +302,7 @@ applyConfig() {
 		menuItem "1" "Apply Settings"
 		menuItem "2" "Apply Configs"
 		menuItem "3" "Configure Apps"
-		menuItem "4" "Organize Launchpad"
+		# menuItem "4" "Organize Launchpad"
 		echo
 		menuItem "0" "Back"
 		echo
@@ -323,11 +323,11 @@ applyConfig() {
 			pressAnyKeyToContinue
 			select="*"
 			;;
-		4)
-			configAnsiblePlaybook "lporg"
-			pressAnyKeyToContinue
-			select="*"
-			;;
+		# 4)
+		# 	configAnsiblePlaybook "lporg"
+		# 	pressAnyKeyToContinue
+		# 	select="*"
+		# 	;;
 		0)
 			return 0
 			;;
