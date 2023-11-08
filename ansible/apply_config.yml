@@ -64,6 +64,7 @@
                     dest: '{{ backup_path }}/backup_{{ current_timestamp }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
                   loop: '{{ item_list.files }}'
                   when: item.isreg
+                  ignore_errors: true
 
             - name: Create destination dirs
               file:
