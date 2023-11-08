@@ -112,3 +112,20 @@
 
       when: ansible_os_family=="Darwin"
       tags: script
+
+    # Install lporg
+    - name: Install lporg
+      block:
+        - name: Set pkg vars
+          set_fact:
+            github_username: ggragham
+            github_reponame: lporg
+            artifact_name: lporg
+            arch_type: macOS_universal
+            extension: tar.gz
+            pkg_name: lporg
+        - name: Install {{ pkg_name }}
+          include_tasks: '{{ ansible_path }}/_install_pkg_from_github.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: lporg

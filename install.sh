@@ -193,6 +193,7 @@ installBasePackages() {
 		menuItem "1" "Install Homebrew PKGs"
 		menuItem "2" "Install Oh My ZSH"
 		menuItem "3" "Install Scripts"
+		menuItem "4" "Install lporg"
 		echo
 		menuItem "0" "Back"
 		echo
@@ -210,6 +211,11 @@ installBasePackages() {
 			;;
 		3)
 			baseAnsiblePlaybook "script"
+			pressAnyKeyToContinue
+			select="*"
+			;;
+		4)
+			baseAnsiblePlaybook "lporg"
 			pressAnyKeyToContinue
 			select="*"
 			;;
