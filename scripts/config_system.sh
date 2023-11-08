@@ -1,55 +1,33 @@
 #!/usr/bin/env bash
 
-# System config.
+# ----------------------------------------------------------
+# --------------------- System Settings --------------------
+# ----------------------------------------------------------
 
-trap 'errMsg' ERR
-cd "$(dirname "$0")" || exit "$?"
+############
+### WiFI ###
+############
+# Ask to join networks [no]
+sets_uuid=$(/usr/libexec/PlistBuddy -c "Print Sets" "/Library/Preferences/SystemConfiguration/preferences.plist" | grep -o -E '[0-9A-Fa-f-]{36}' | head -n 1)
+/usr/libexec/PlistBuddy -c "Set :Sets:$sets_uuid:Network:Interface:en0:AirPort:JoinModeFallback:0 DoNothing" /Library/Preferences/SystemConfiguration/preferences.plist
+# Ask to join hotspots [no]
+defaults write /Library/Preferences/SystemConfiguration/com.apple.airport.preferences.plist AutoHotspotMode Never
 
-USERNAME="$SUDO_USER"
-SYSTEM_CONFIG_PATH="../system_conf"
+################
+### Bluetoot ###
+################
+# Advanced > Open when no keyboard is detected
+defaults write /Library/Preferences/com.apple.bluetooth.plist BluetoothAutoSeekKeyboard 0
+# Advanced > Open when no mouse or trackpad is detected
+defaults write /Library/Preferences/com.apple.bluetooth.plist BluetoothAutoSeekPointingDevice 0
 
-errMsg() {
-    echo "Failed"
-    exit 1
-}
-
-isSudo() {
-    if [[ $EUID != 0 ]] || [[ -z $USERNAME ]]; then
-        echo "Run script with sudo"
-        exit 1
-    fi
-}
-
-pressAnyKeyToContinue() {
-    read -n 1 -s -r -p "Press any key to continue"
-    echo
-}
-
-loadHostsFile() {
-    local hostsFileSource="$SYSTEM_CONFIG_PATH/hosts"
-    local hostsFileDest="/etc/hosts"
-    hostsFile="$(cat $hostsFileSource)"
-    IFS=$'\n'
-    # Find lines from $hostsFileSource in $hostsFileDest
-    # and replace their values.
-    # If there are no lines in file
-    # it will add them.
-    for line in $hostsFile; do
-        selectedLine=$(echo -e "$line" | awk -F '=' '{print $1}')
-        if grep -q "$selectedLine" "$hostsFileDest"; then
-            sed -i "s/${selectedLine}.*/${line}/g" "$hostsFileDest" 2>/dev/null
-        else
-            echo -e "$line" >>"$hostsFileDest"
-        fi
-    done
-
-    echo "Hosts file has been loaded"
-}
-
-main() {
-    isSudo
-    loadHostsFile
-    pressAnyKeyToContinue
-}
-
-main
+###############
+### Battery ###
+###############
+# Low Power Mode [Only on Battery]
+BatteryPlistPath="$(ls /Library/Preferences/com.apple.PowerManagement.*.plist)"
+/usr/libexec/PlistBuddy -c "Set :Battery\ Power:LowPowerMode 1" "$BatteryPlistPath"
+# Options > Wake for network access [never]
+/usr/bin/pmset -a womp 0
+# Options > Enable Power Nap [never]
+/usr/bin/pmset -a powernap 0

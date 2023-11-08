@@ -1,0 +1,37 @@
+{
+    "editor.fontFamily": "'Comic Code', 'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace",
+    "editor.fontSize": 14,
+    "editor.fontLigatures": true,
+    "editor.insertSpaces": false,
+    "editor.renderWhitespace": "boundary",
+    "terminal.integrated.fontFamily": "'Comic Code', 'JetBrains Mono', monospace",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "redhat.telemetry.enabled": false,
+    "telemetry.enableTelemetry": false,
+    "telemetry.telemetryLevel": "off",
+    "explorer.confirmDelete": false,
+    "files.associations": {
+        "*.yml": "yaml"
+    },
+    "workbench.colorTheme": "Monokai++ Unified",
+    "workbench.iconTheme": "material-icon-theme",
+    "git.autofetch": true,
+    "git.defaultBranchName": "master",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.titleBarStyle": "custom",
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "shellformat.flag": "-i 0",
+    "spellright.language": [
+        "en",
+        "uk",
+        "ru"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ]
+}

@@ -1,0 +1,14 @@
+---
+- name: Check zsh existence
+  stat:
+    path: '{{ home_path }}/.zshrc'
+  register: zsh_exist
+
+- name: Make zsh config symlink
+  file:
+    src: '{{ omz_path }}/{{ omz_config_name }}_zsh'
+    dest: '{{ local_config_path }}/omz/{{ omz_config_name }}_zsh'
+    state: link
+    force: true
+    owner: '{{ user }}'
+  when: zsh_exist.stat.exists

@@ -1,0 +1,26 @@
+# Color output
+alias grep='grep --color=always'
+alias gcc='gcc -fdiagnostics-color=always'
+alias dir='dir --color=always'
+alias diff='diff --color=always'
+
+# cd aliases
+alias /="cd /"
+alias ~="cd ~"
+alias ..="cd .."
+alias ...="cd ../.."
+
+# Exiftool 
+alias etcreate="exiftool -CreateDate"
+alias rexif="exiftool -all="
+alias rexifp="exiftool -all= -TagsFromFile @ -ColorSpaceTags DIRorFILES"
+alias orexif="exiftool -overwrite_original -all="
+alias et="exiftool"
+
+# Misc
+alias python="python3"
+alias py3="python3"
+alias cal="cal -3"
+alias his="history"
+
+alias tb="nc termbin.com 9999"

@@ -1,0 +1,22 @@
+---
+user: '{{ ansible_env.USER }}'
+
+# Repo path
+repo_root_path: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
+ansible_path: '{{ repo_root_path }}/ansible'
+backup_path: '{{ repo_root_path }}/backup'
+config_path: '{{ repo_root_path }}/config'
+user_conf_path: '{{ config_path }}/local_conf'
+system_conf_path: '{{ config_path }}/system_conf'
+omz_path: '{{ config_path }}/omz'
+script_path: '{{ repo_root_path }}/scripts'
+plist_script_path: '{{ script_path }}/plists'
+
+# Local path
+home_path: /Users/{{ user }}
+local_config_path: '{{ home_path }}/.config'
+local_path: '{{ home_path }}/.local'
+local_bin_path: '{{ local_path }}/bin'
+local_games_path: '{{ local_path }}/games'
+local_lib_path: '{{ local_path }}/lib'
+local_opt_path: '{{ local_path }}/opt'

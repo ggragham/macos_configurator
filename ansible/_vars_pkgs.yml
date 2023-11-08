@@ -1,0 +1,66 @@
+---
+core_tap_list:
+  - blacktop/tap
+
+core_brew_list:
+  - bat
+  - curl
+  - exiftool
+  - htop
+  # - lporg
+  - neofetch
+  - openssl
+
+core_cask_list:
+  - android-file-transfer
+  # - bitwarden
+  - brave-browser
+  - fanny
+  - freetube
+  - iterm2
+  - lulu
+  - openinterminal
+  - rectangle
+  # - telegram
+  - tunnelblick
+  - ueli
+
+script_list:
+  - gen_secret
+  - getip
+  - macspoof
+  - weather
+
+devops_tap_list:
+  - warrensbox/tap
+
+devops_brew_list:
+  - awscli
+  - tfswitch
+
+virt_list:
+  - virtualbox
+  - vagrant
+
+pyenv_build_deps:
+  - openssl
+  - readline
+  - sqlite3
+  - tcl-tk
+  - xz
+  - zlib
+
+vscode_extensions:
+  - ban.spellright
+  - Gruntfuggly.todo-tree
+  - MattiasBaake.vscode-snippets-for-ansible
+  - PKief.material-icon-theme
+  - dcasella.monokai-plusplus
+  - foxundermoon.shell-format
+  - jeff-hykin.better-shellscript-syntax
+  - lonefy.vscode-JS-CSS-HTML-formatter
+  - mads-hartmann.bash-ide-vscode
+  - redhat.vscode-yaml
+  - timonwong.shellcheck
+  - vscodevim.vim
+  - wholroyd.jinja

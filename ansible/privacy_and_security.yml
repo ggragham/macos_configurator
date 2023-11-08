@@ -1,0 +1,66 @@
+---
+- name: MacOS Privacy&Security config
+  hosts: all
+  become: true
+
+  vars_files:
+    - _vars_base.yml
+
+  tasks:
+    # Hosts
+    - name: Set hosts
+      block:
+        - name: Read hosts from file
+          set_fact:
+            hosts_content: "{{ lookup('file', '{{ system_conf_path }}/hosts') }}"
+
+        - name: Append hosts
+          lineinfile:
+            path: /etc/hosts
+            line: '{{ item }}'
+          loop: "{{ hosts_content.split('\n') }}"
+          when: item | trim != ''
+
+      when: ansible_os_family=="Darwin"
+      tags: hosts
+
+    # Cleanup
+    - name: Cleanup
+      block:
+        - name: System Cleanup
+          command: bash {{ script_path }}/cleanup_system.sh
+
+        - name: Local Cleanup
+          command: bash {{ script_path }}/cleanup_local.sh
+          become_user: '{{ user }}'
+
+      when: ansible_os_family=="Darwin"
+      tags: cleanup
+
+    # Security
+    - name: Security
+      block:
+        - name: System Security
+          command: bash {{ script_path }}/security_system.sh
+          become_user: '{{ user }}'
+
+        - name: Local Security
+          command: bash {{ script_path }}/security_local.sh
+          become_user: '{{ user }}'
+
+      when: ansible_os_family=="Darwin"
+      tags: security
+
+    # Privacy
+    - name: Privacy
+      block:
+        - name: System Privacy
+          command: bash {{ script_path }}/privacy_system.sh
+          become: true
+
+        - name: Local Privacy
+          command: bash {{ script_path }}/privacy_local.sh
+          become_user: '{{ user }}'
+
+      when: ansible_os_family=="Darwin"
+      tags: privacy

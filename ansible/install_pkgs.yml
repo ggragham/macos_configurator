@@ -1,0 +1,131 @@
+---
+- name: Install PKGs to MacOS
+  hosts: all
+
+  vars_files:
+    - _vars_base.yml
+    - _vars_pkgs.yml
+
+  pre_tasks:
+    - name: Preparatory steps
+      block:
+        - name: Create local dirs
+          include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+
+      tags: prepare
+
+  tasks:
+    # Homebrew
+    - name: Install homebrew PKGs
+      block:
+        - name: Add taps to MacOS
+          homebrew_tap:
+            name: '{{ core_tap_list }}'
+            state: present
+
+        - name: Install base brew PKGs to MacOS
+          homebrew:
+            name: '{{ core_brew_list }}'
+            state: present
+            update_homebrew: true
+
+        - name: Install base cask PKGs to MacOS
+          homebrew_cask:
+            name: '{{ core_cask_list }}'
+            state: present
+
+        # AutoRaise
+        - name: AutoRaise
+          block:
+            - name: Add dimentium tap
+              homebrew_tap:
+                name: dimentium/autoraise
+                state: present
+            - name: Install AutoRaise
+              homebrew:
+                name: autoraise
+                install_options: with-dexperimental_focus_first
+                state: present
+                update_homebrew: true
+          tags: autoraise
+
+      when: ansible_os_family=="Darwin"
+      tags: brew
+
+    # Oh My ZSH
+    - name: Install and config Oh My ZSH
+      block:
+        - name: Run omz install script
+          shell:
+            cmd: >
+              curl -o- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash
+            creates: '{{ local_opt_path }}/oh-my-zsh/oh-my-zsh.sh'
+          environment:
+            ZSH: '{{ local_opt_path }}/oh-my-zsh'
+            CHSH: 'no'
+            RUNZSH: 'no'
+
+        - name: Install OMZ plugins
+          git:
+            repo: https://github.com/zsh-users/{{ item }}.git
+            dest: '{{ local_opt_path }}/oh-my-zsh/custom/plugins/{{ item }}'
+            version: master
+            update: true
+          with_items: [zsh-syntax-highlighting, zsh-autosuggestions]
+
+        - name: Config OMZ
+          block:
+            - name: Create omz config directory
+              file:
+                path: '{{ local_config_path }}/omz'
+                state: directory
+                owner: '{{ user }}'
+                mode: 0700
+            - name: Make .zshrc symlink
+              file:
+                src: '{{ omz_path }}/.zshrc'
+                dest: '{{ home_path }}/.zshrc'
+                state: link
+                force: true
+                owner: '{{ user }}'
+                mode: 0700
+            - name: Make config symlinks
+              file:
+                src: '{{ omz_path }}/{{ item }}'
+                dest: '{{ local_config_path }}/omz/{{ item }}'
+                state: link
+                force: true
+                owner: '{{ user }}'
+                mode: 0700
+              with_items: alias_zsh
+
+      when: ansible_os_family=="Darwin"
+      tags: omz
+
+    # Download Scripts
+    - name: Download some scripts
+      get_url:
+        url: https://raw.githubusercontent.com/ggragham/just_bunch_of_scripts/master/bin/{{ item }}
+        dest: '{{ local_bin_path }}/'
+        mode: 0700
+      with_items: '{{ script_list }}'
+
+      when: ansible_os_family=="Darwin"
+      tags: script
+
+    # Install lporg
+    - name: Install lporg
+      block:
+        - name: Set pkg vars
+          set_fact:
+            github_username: ggragham
+            github_reponame: lporg
+            artifact_name: lporg
+            arch_type: macOS_universal
+            extension: tar.gz
+            pkg_name: lporg
+        - name: Install {{ pkg_name }}
+          include_tasks: '{{ ansible_path }}/_install_pkg_from_github.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: lporg

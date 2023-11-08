@@ -1,0 +1,156 @@
+---
+- name: Config MacOS
+  hosts: all
+
+  vars_files:
+    - _vars_base.yml
+
+  pre_tasks:
+    - name: Preparatory steps
+      block:
+        - name: Create local dirs
+          include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+
+      tags: prepare
+
+  tasks:
+    # Config script
+    - name: Config Script
+      block:
+        - name: Run system config script
+          command: bash {{ script_path }}/config_system.sh
+          become: true
+
+        - name: Run local config script
+          command: bash {{ script_path }}/config_local.sh
+
+      when: ansible_os_family=="Darwin"
+      tags: config_script
+
+    # Local config files
+    - name: Apply config files
+      block:
+        - name: Apply .config configs
+          block:
+            - name: Create config and backup dir
+              file:
+                path: '{{ item }}'
+                state: directory
+              with_items:
+                - '{{ local_config_path }}'
+                - '{{ backup_path }}'
+
+            - name: Make dirs and files list
+              find:
+                paths: '{{ user_conf_path }}/.config'
+                recurse: true
+                file_type: any
+              register: item_list
+
+            - name: Make backup
+              block:
+                - name: Get current timestamp
+                  set_fact:
+                    current_timestamp: "{{ lookup('pipe', 'date \"+%d_%m_%Y_%H_%M_%S\"') }}"
+                - name: Create backup dirs
+                  file:
+                    path: '{{ backup_path }}/backup_{{ current_timestamp }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+                    state: directory
+                  loop: '{{ item_list.files }}'
+                  when: item.isdir
+                - name: Create backup
+                  copy:
+                    src: '{{ local_config_path }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+                    dest: '{{ backup_path }}/backup_{{ current_timestamp }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+                  loop: '{{ item_list.files }}'
+                  when: item.isreg
+                  ignore_errors: true
+
+            - name: Create destination dirs
+              file:
+                path: '{{ local_config_path }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+                state: directory
+              loop: '{{ item_list.files }}'
+              when: item.isdir
+
+            - name: Create config symlinks
+              file:
+                src: '{{ item.path }}'
+                dest: '{{ local_config_path }}/{{ item.path | regex_replace(user_conf_path + "/.config/", "") }}'
+                state: link
+                force: true
+              loop: '{{ item_list.files }}'
+              when: item.isreg
+
+        - name: Apply vim config
+          file:
+            src: '{{ user_conf_path }}/.vimrc'
+            dest: '{{ home_path }}/.vimrc'
+            state: link
+            force: true
+
+      when: ansible_os_family=="Darwin"
+      tags: local_config_files
+
+    # Per-App config
+    - name: Per-App config
+      block:
+        - name: Rectangle
+          block:
+            - name: Check Rectangle existence
+              stat:
+                path: /Applications/Rectangle.app
+              register: rectangle_exist
+            - name: Apply Rectangle config
+              command: bash {{ plist_script_path }}/com.knollsoft.Rectangle.sh
+              when: rectangle_exist.stat.exists
+
+        - name: Fanny
+          block:
+            - name: Check Fanny existence
+              stat:
+                path: /Applications/Fanny.app
+              register: fanny_exist
+            - name: Apply Fanny config
+              command: bash {{ plist_script_path }}/com.fannywidget.sh
+              when: fanny_exist.stat.exists
+
+        - name: ueli
+          block:
+            - name: Check ueli existence
+              stat:
+                path: /Applications/ueli.app
+              register: ueli_exist
+            - name: Apply ueli config
+              copy:
+                src: '{{ config_path }}/ueli.config.json'
+                dest: '{{ home_path }}/Library/Application Support/ueli/config.json'
+                mode: '0666'
+              when: ueli_exist.stat.exists
+
+        - name: OpenInTerminal
+          block:
+            - name: Check OpenInTerminal existence
+              stat:
+                path: /Applications/OpenInTerminal.app
+              register: openinterminal_exist
+            - name: Apply OpenInTerminal config
+              command: bash {{ plist_script_path }}/wang.jianing.app.OpenInTerminal.sh
+              when: openinterminal_exist.stat.exists
+
+      when: ansible_os_family=="Darwin"
+      tags: app_config
+
+    # - name: Organize MacOS Launchpad Apps
+    #   block:
+    #     - name: Check lporg existence
+    #       stat:
+    #         path: /usr/local/bin/lporg
+    #       register: lporg_exist
+
+    #     - name: Apply lporg config
+    #       shell: lporg load -n -y -c {{ config_path }}/lporg.yml
+    #       when: lporg_exist.stat.exists
+
+    #   when: ansible_os_family=="Darwin"
+    #   tags: lporg

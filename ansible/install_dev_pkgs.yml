@@ -1,0 +1,225 @@
+---
+- name: Install dev PKGs to MacOS
+  hosts: all
+
+  vars_files:
+    - _vars_base.yml
+    - _vars_pkgs.yml
+
+  pre_tasks:
+    - name: Preparatory steps
+      block:
+        - name: Create local dirs
+          include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
+
+        - name: Install gnu-tar
+          homebrew:
+            name: gnu-tar
+            state: present
+            update_homebrew: true
+          when: ansible_os_family=="Darwin"
+
+      tags: prepare
+
+  tasks:
+    # Base DevOps PKGs
+    - name: Install base DevOps PKGs to MacOS
+      block:
+        - name: Install DevOps Homebrew PKGs
+          block:
+            - name: Add DevOps taps to MacOS
+              homebrew_tap:
+                name: '{{ devops_tap_list }}'
+                state: present
+            - name: Install DevOps brew PKGs to MacOS
+              homebrew:
+                name: '{{ devops_brew_list }}'
+                state: present
+                update_homebrew: true
+
+        - name: Apply DevOps zsh config
+          block:
+            - name: Set config name
+              set_fact:
+                omz_config_name: devops
+            - name: Apply {{ omz_config_name }}_zsh config
+              include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: devops
+
+    # VSCodium
+    - name: Install and config VSCodium
+      block:
+        - name: Install VSCode to MacOS
+          homebrew_cask:
+            name: vscodium
+            state: present
+            update_homebrew: true
+
+        - name: Install VSCodium extensions
+          command:
+            cmd: codium --install-extension {{ item }}
+          with_items: '{{ vscode_extensions }}'
+
+        - name: Apply VSCodium config
+          file:
+            src: '{{ user_conf_path }}/vsc_settings.json'
+            dest: '{{ home_path }}/Library/Application Support/VSCodium/User/settings.json'
+            state: link
+            force: true
+
+      when: ansible_os_family=="Darwin"
+      tags: vscodium
+
+    # Virtualization
+    - name: Install and config virtualization
+      block:
+        - name: Install virt PKGs to MacOS
+          homebrew_cask:
+            name: '{{ virt_list }}'
+            state: present
+            update_homebrew: true
+
+        - name: Apply virtualization zsh config
+          block:
+            - name: Set config name
+              set_fact:
+                omz_config_name: virt
+            - name: Apply {{ omz_config_name }}_zsh config
+              include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: virtualization
+
+    # Docker
+    - name: Install Docker
+      block:
+        - name: Install docker to MacOS
+          homebrew_cask:
+            name: docker
+            state: present
+            update_homebrew: true
+
+        - name: Apply Docker zsh config
+          block:
+            - name: Set config name
+              set_fact:
+                omz_config_name: docker
+            - name: Apply {{ omz_config_name }}_zsh config
+              include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: docker
+
+    # Kubernetes
+    - name: Install kubernetes PKGs
+      block:
+        - name: Install minikube
+          get_url:
+            url: https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
+            dest: '{{ local_bin_path }}/minikube'
+            mode: 0700
+
+        - name: Install kubectl
+          block:
+            - name: Get kubectl version
+              command: curl -sL https://dl.k8s.io/release/stable.txt
+              register: kubectl_version
+            - name: Download kubectl
+              get_url:
+                url: https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/darwin/amd64/kubectl
+                dest: '{{ local_bin_path }}/kubectl'
+                mode: 0700
+
+        - name: Install kubens
+          block:
+            - name: Set pkg vars
+              set_fact:
+                github_username: ahmetb
+                github_reponame: kubectx
+                artifact_name: kubens
+                arch_type: darwin_x86_64
+                extension: tar.gz
+                pkg_name: kubens
+            - name: Install {{ pkg_name }}
+              include_tasks: '{{ ansible_path }}/_install_pkg_from_github.yml'
+
+        - name: Install kubectx
+          block:
+            - name: Set pkg vars
+              set_fact:
+                github_username: ahmetb
+                github_reponame: kubectx
+                artifact_name: kubectx
+                arch_type: darwin_x86_64
+                extension: tar.gz
+                pkg_name: kubectx
+            - name: Install {{ pkg_name }}
+              include_tasks: '{{ ansible_path }}/_install_pkg_from_github.yml'
+
+        - name: Apply kubernetes zsh config
+          block:
+            - name: Set config name
+              set_fact:
+                omz_config_name: k8s
+            - name: Apply {{ omz_config_name }}_zsh config
+              include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: kubernetes
+
+    # PyEnv
+    - name: Install PyEnv
+      block:
+        - name: Install PyEnv build dependencies to MacOS
+          homebrew:
+            name: '{{ pyenv_build_deps }}'
+            state: present
+            update_homebrew: true
+
+        - name: Run PyEnv install script
+          shell:
+            cmd: curl -o- htps://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+            creates: '{{ local_opt_path }}/pyenv/bin/pyenv'
+          environment:
+            PYENV_ROOT: '{{ local_opt_path }}/pyenv'
+
+        - name: Apply PyEnv zsh config
+          block:
+            - name: Set config name
+              set_fact:
+                omz_config_name: pyenv
+            - name: Apply {{ omz_config_name }}_zsh config
+              include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: pyenv
+
+    # NVM
+    - name: Install NVM
+      block:
+        - name: Create NVM dir
+          file:
+            path: '{{ local_opt_path }}/nvm'
+            state: directory
+            owner: '{{ user }}'
+            mode: 0700
+
+        - name: Run NVM install script
+          shell:
+            cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+            creates: '{{ local_opt_path }}/nvm/nvm.sh'
+          environment:
+            NVM_DIR: '{{ local_opt_path }}/nvm'
+
+        - name: Apply NVM zsh config
+          block:
+            - name: Set config name
+              set_fact:
+                omz_config_name: nvm
+            - name: Apply {{ omz_config_name }}_zsh config
+              include_tasks: '{{ ansible_path }}/_apply_zsh_config.yml'
+
+      when: ansible_os_family=="Darwin"
+      tags: nvm
