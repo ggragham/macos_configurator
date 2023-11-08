@@ -7,7 +7,7 @@ core_brew_list:
   - curl
   - exiftool
   - htop
-  - lporg
+  # - lporg
   - neofetch
   - openssl
 
