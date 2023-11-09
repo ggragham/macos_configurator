@@ -22,6 +22,12 @@ defaults write /Library/Preferences/com.apple.bluetooth.plist BluetoothAutoSeekK
 defaults write /Library/Preferences/com.apple.bluetooth.plist BluetoothAutoSeekPointingDevice 0
 
 ###############
+### Network ###
+###############
+# Other Services > Thunderbolt Bridge [disable]
+networksetup -setnetworkserviceenabled 'Thunderbolt Bridge' Off
+
+###############
 ### Battery ###
 ###############
 # Low Power Mode [Only on Battery]

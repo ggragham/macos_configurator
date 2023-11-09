@@ -5,12 +5,6 @@
 # ----------------------------------------------------------
 
 ###############
-### Network ###
-###############
-# Other Services > Thunderbolt Bridge [disable]
-networksetup -setnetworkserviceenabled 'Thunderbolt Bridge' Off
-
-###############
 ### General ###
 ###############
 # AirDrop & Handoff > Allow Handoff between this Mac and your iCloud devices [disable]
