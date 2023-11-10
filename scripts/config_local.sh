@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+REPO_ROOT_PATH="$(git rev-parse --show-toplevel 2>/dev/null)"
+SYSTEM_PLIST_PATH="$REPO_ROOT_PATH/config/system_conf"
+
 # ----------------------------------------------------------
 # --------------------- System Settings --------------------
 # ----------------------------------------------------------
@@ -73,12 +76,10 @@ defaults -currentHost write com.apple.controlcenter 'NSStatusItem Preferred Posi
 ### Siri & Spotlight ###
 ########################
 # Search results [disable all]
+defaults delete com.apple.Spotlight
 killall Spotlight
-sleep 1
-for ((i = 0; i <= 22; i++)); do
-	# sleep 1
-	/usr/libexec/PlistBuddy -c "Set :orderedItems:$i:enabled bool false" "$HOME/Library/Preferences/com.apple.Spotlight.plist"
-done
+sleep 2
+/usr/libexec/PlistBuddy -c "Merge $SYSTEM_PLIST_PATH/com.apple.Spotlight.plist" "$HOME/Library/Preferences/com.apple.Spotlight.plist"
 
 ##########################
 ### Privacy & Security ###
