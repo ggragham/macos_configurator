@@ -63,7 +63,7 @@ installInitDeps() {
 		exit 1
 	fi
 
-	if ! brew --version 2>/dev/null 1>&2; then
+	if ! runAsUser brew --version 2>/dev/null 1>&2; then
 		createTmpDir
 		local brewInstallPath="$tmpDir/brew_install.sh"
 
@@ -79,7 +79,7 @@ installInitDeps() {
 		echo "Brew installation complete"
 	fi
 
-	if ! ansible --version 2>/dev/null 1>&2; then
+	if ! runAsUser ansible --version 2>/dev/null 1>&2; then
 		(
 			set -e
 			echo "Installing Ansible..."
