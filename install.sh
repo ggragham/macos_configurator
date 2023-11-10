@@ -351,10 +351,6 @@ privacyAndSecurity() {
 		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/privacy_and_security.yml" --tags "$*"
 	}
 
-	clear
-	echo -e "\n\n\t${RED}${BLINK}Some of these tasks may require disabling SIP (System Integrity Protection)${NORMAL}\n\n"
-	pressAnyKeyToContinue
-
 	local select="*"
 	while :; do
 		printHeader
