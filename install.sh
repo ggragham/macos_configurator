@@ -47,7 +47,7 @@ installInitDeps() {
 			set -e
 			echo "Installing Homebrew..."
 			curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$brewInstallPath"
-			NONINTERACTIVE=1 /bin/bash "$brewInstallPath"
+			/bin/bash "$brewInstallPath"
 		) || {
 			echo "Failed to install Homebrew. Exiting..."
 			exit 2
