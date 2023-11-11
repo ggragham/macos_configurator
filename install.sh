@@ -8,43 +8,23 @@ cd "$(dirname "$0")" || exit "$?"
 
 # Global vars
 TEMP_DIR="$(mktemp -d)"
+CURRENT_PLATFORM="$(uname -s)"
 USERNAME="$SUDO_USER"
 PRESERVE_USER_ENV="TMPDIR"
 PRESERVE_ENV="${PRESERVE_USER_ENV},ANSIBLE_LOCALHOST_WARNING,ANSIBLE_INVENTORY_UNPARSED_WARNING"
-CURRENT_PLATFORM="$(uname -s)"
-DEST_PATH="/Users/$USERNAME/.local/opt"
 REPO_NAME="macos_configurator"
 REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
-SCRIPT_NAME="install.sh"
-CURRENT_SCRIPT_PATH="$(readlink -f "$0")"
-DEFAULT_SCRIPT_PATH="$DEST_PATH/$REPO_NAME/$SCRIPT_NAME"
 REPO_ROOT_PATH="${REPO_ROOT_PATH:-$HOME/.local/opt/$REPO_NAME}"
 ANSIBLE_PLAYBOOK_PATH="$REPO_ROOT_PATH/ansible"
 
 # Text formating
-BOLD='\033[1m'
-BLINK='\033[5m'
-LONG_TAB='\033[40G'
-RED='\033[0;31m'
-LIGHTBLUE='\033[1;34m'
-# GREEN='\033[0;32m'
 NORMAL='\033[0m'
-
-isSudo() {
-	if [[ $EUID != 0 ]] || [[ -z $USERNAME ]]; then
-		sudo --preserve-env="$PRESERVE_USER_ENV" bash "$SCRIPT_NAME"
-		exit 1
-	fi
-}
-
-runAsUser() {
-	sudo --preserve-env="$PRESERVE_ENV" --user="$USERNAME" "$@"
-}
-
-pressAnyKeyToContinue() {
-	read -n 1 -s -r -p "Press any key to continue"
-	echo
-}
+BOLD='\033[1m'
+LONG_TAB='\033[40G'
+LIGHTBLUE='\033[1;34m'
+# BLINK='\033[5m'
+# RED='\033[0;31m'
+# GREEN='\033[0;32m'
 
 cleanup() {
 	local exitStatus="$?"
@@ -104,6 +84,22 @@ init() {
 	if [ "$PWD/$0" != "$REPO_ROOT_PATH/$0" ]; then
 		cloneRepo
 	fi
+}
+
+isSudo() {
+	if [[ $EUID != 0 ]] || [[ -z $USERNAME ]]; then
+		sudo --preserve-env="$PRESERVE_USER_ENV" bash "$0"
+		cleanup
+	fi
+}
+
+runAsUser() {
+	sudo --preserve-env="$PRESERVE_ENV" --user="$USERNAME" "$@"
+}
+
+pressAnyKeyToContinue() {
+	read -n 1 -s -r -p "Press any key to continue"
+	echo
 }
 
 asciiLogo() {
@@ -408,7 +404,7 @@ main() {
 			select="*"
 			;;
 		0)
-			exit 0
+			return 0
 			;;
 		*)
 			read -rp "> " select
