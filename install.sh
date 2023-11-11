@@ -7,6 +7,7 @@
 cd "$(dirname "$0")" || exit "$?"
 
 # Global vars
+TEMP_DIR="$(mktemp -d)"
 USERNAME="$SUDO_USER"
 PRESERVE_USER_ENV="TMPDIR"
 PRESERVE_ENV="${PRESERVE_USER_ENV},ANSIBLE_LOCALHOST_WARNING,ANSIBLE_INVENTORY_UNPARSED_WARNING"
@@ -17,7 +18,7 @@ REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
 SCRIPT_NAME="install.sh"
 CURRENT_SCRIPT_PATH="$(readlink -f "$0")"
 DEFAULT_SCRIPT_PATH="$DEST_PATH/$REPO_NAME/$SCRIPT_NAME"
-REPO_ROOT_PATH="$(git rev-parse --show-toplevel 2>/dev/null)"
+REPO_ROOT_PATH="${REPO_ROOT_PATH:-$HOME/.local/opt/$REPO_NAME}"
 ANSIBLE_PLAYBOOK_PATH="$REPO_ROOT_PATH/ansible"
 
 # Text formating
@@ -45,33 +46,28 @@ pressAnyKeyToContinue() {
 	echo
 }
 
+cleanup() {
+	local exitStatus="$?"
+	rm -rf "$TEMP_DIR"
+	exit "$exitStatus"
+}
+
+trap cleanup INT
+
 installInitDeps() {
-	createTmpDir() {
-		tmpDir="$(runAsUser mktemp -d)"
-	}
-
-	deleteTmpDir() {
-		if [ -n "$tmpDir" ] && [ -d "$tmpDir" ]; then
-			rm -rf "$tmpDir"
-		fi
-	}
-
-	trap deleteTmpDir EXIT INT
-
 	if [[ "$CURRENT_PLATFORM" != "Darwin" ]]; then
 		echo -e "Platform ${BOLD}$CURRENT_PLATFORM${NORMAL} is not supported"
 		exit 1
 	fi
 
-	if ! runAsUser brew --version 2>/dev/null 1>&2; then
-		createTmpDir
-		local brewInstallPath="$tmpDir/brew_install.sh"
+	if ! brew --version 2>/dev/null 1>&2; then
+		local brewInstallPath="$TEMP_DIR/brew_install.sh"
 
 		(
 			set -e
 			echo "Installing Homebrew..."
-			runAsUser curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$brewInstallPath"
-			runAsUser NONINTERACTIVE=1 /bin/bash "$brewInstallPath"
+			curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$brewInstallPath"
+			NONINTERACTIVE=1 /bin/bash "$brewInstallPath"
 		) || {
 			echo "Failed to install Homebrew. Exiting..."
 			exit 2
@@ -79,12 +75,12 @@ installInitDeps() {
 		echo "Brew installation complete"
 	fi
 
-	if ! runAsUser ansible --version 2>/dev/null 1>&2; then
+	if ! ansible --version 2>/dev/null 1>&2; then
 		(
 			set -e
 			echo "Installing Ansible..."
-			runAsUser brew update
-			runAsUser brew install ansible
+			brew update
+			brew install ansible
 		) || {
 			echo "Failed to install Ansible. Exiting..."
 			exit 2
@@ -94,29 +90,19 @@ installInitDeps() {
 }
 
 cloneRepo() {
-	cloneMacOSConfigRepo() { (
+	(
 		set -eu
-		runAsUser mkdir -p "$DEST_PATH"
-		runAsUser git clone "$REPO_LINK" "$DEST_PATH/$REPO_NAME"
-	); }
-
-	runConfigurator() {
-		if bash "$DEFAULT_SCRIPT_PATH"; then
-			exit "$?"
-		else
-			local errcode="$?"
-			echo "Failed to start MacOS Configurator"
-			exit "$errcode"
+		if [[ ! -d "$REPO_ROOT_PATH/.git" ]]; then
+			mkdir -p "$REPO_ROOT_PATH"
+			git clone "$REPO_LINK" "$REPO_ROOT_PATH"
 		fi
-	}
+	)
+}
 
-	if [[ -d "./.git" ]]; then
-		return 0
-	elif [[ "$DEFAULT_SCRIPT_PATH" != "$CURRENT_SCRIPT_PATH" ]]; then
-		if [[ ! -d "$DEST_PATH/$REPO_NAME" ]]; then
-			cloneMacOSConfigRepo
-		fi
-		runConfigurator
+init() {
+	installInitDeps
+	if [ "$PWD/$0" != "$REPO_ROOT_PATH/$0" ]; then
+		cloneRepo
 	fi
 }
 
@@ -395,9 +381,8 @@ privacyAndSecurity() {
 }
 
 main() {
+	init
 	isSudo
-	installInitDeps
-	cloneRepo
 
 	local select="*"
 	while :; do
