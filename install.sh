@@ -32,7 +32,7 @@ cleanup() {
 	exit "$exitStatus"
 }
 
-trap cleanup INT
+trap cleanup TERM EXIT
 
 installInitDeps() {
 	if [[ "$CURRENT_PLATFORM" != "Darwin" ]]; then
@@ -89,7 +89,7 @@ init() {
 isSudo() {
 	if [[ $EUID != 0 ]] || [[ -z $USERNAME ]]; then
 		sudo --preserve-env="$PRESERVE_USER_ENV" bash "$0"
-		cleanup
+		exit 0
 	fi
 }
 
