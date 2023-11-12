@@ -3,7 +3,7 @@
 # Main script.
 # Check and download dependencies
 # Interactive menu to execute playbooks.
-set -x
+
 cd "$(dirname "$0")" || exit "$?"
 
 # Global vars
