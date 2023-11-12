@@ -4,8 +4,6 @@
 # Check and download dependencies
 # Interactive menu to execute playbooks.
 
-cd "$(dirname "$0")" || exit "$?"
-
 # Global vars
 TEMP_DIR="$(mktemp -d)"
 CURRENT_PLATFORM="$(uname -s)"
@@ -90,6 +88,7 @@ init() {
 	if [ "$PWD/$0" != "$REPO_ROOT_PATH/$0" ]; then
 		cloneRepo
 	fi
+	cd "$REPO_ROOT_PATH" || exit "$?"
 }
 
 enterUserPassword() {
