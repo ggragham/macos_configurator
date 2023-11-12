@@ -3,15 +3,13 @@
 # Main script.
 # Check and download dependencies
 # Interactive menu to execute playbooks.
-
+set -x
 cd "$(dirname "$0")" || exit "$?"
 
 # Global vars
 TEMP_DIR="$(mktemp -d)"
 CURRENT_PLATFORM="$(uname -s)"
-USERNAME="$SUDO_USER"
-PRESERVE_USER_ENV="TMPDIR"
-PRESERVE_ENV="${PRESERVE_USER_ENV},ANSIBLE_LOCALHOST_WARNING,ANSIBLE_INVENTORY_UNPARSED_WARNING"
+USER_PASSWORD="${USER_PASSWORD:-}"
 REPO_NAME="macos_configurator"
 REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
 REPO_ROOT_PATH="${REPO_ROOT_PATH:-$HOME/.local/opt/$REPO_NAME}"
@@ -28,11 +26,19 @@ LIGHTBLUE='\033[1;34m'
 
 cleanup() {
 	local exitStatus="$?"
+	unset USER_PASSWORD
 	rm -rf "$TEMP_DIR"
 	exit "$exitStatus"
 }
 
 trap cleanup TERM EXIT
+
+checkSudo() {
+	if [ "$EUID" -eq 0 ]; then
+		echo "Error: Running this script with sudo is not allowed."
+		exit 1
+	fi
+}
 
 installInitDeps() {
 	if [[ "$CURRENT_PLATFORM" != "Darwin" ]]; then
@@ -86,15 +92,33 @@ init() {
 	fi
 }
 
-isSudo() {
-	if [[ $EUID != 0 ]] || [[ -z $USERNAME ]]; then
-		sudo --preserve-env="$PRESERVE_USER_ENV" bash "$0"
-		exit 0
-	fi
-}
+enterUserPassword() {
+	sudo -K
 
-runAsUser() {
-	sudo --preserve-env="$PRESERVE_ENV" --user="$USERNAME" "$@"
+	checkPassword() {
+		if echo "$USER_PASSWORD" | sudo -S true >/dev/null 2>&1; then
+			return 0
+		else
+			echo -e "\nSorry, try again."
+			return 1
+		fi
+	}
+
+	if [ -n "$USER_PASSWORD" ]; then
+		if checkPassword; then
+			return 0
+		fi
+		exit $?
+	fi
+
+	while :; do
+		read -rsp "Password: " USER_PASSWORD
+		if checkPassword; then
+			break
+		fi
+	done
+
+	return 0
 }
 
 pressAnyKeyToContinue() {
@@ -166,7 +190,7 @@ installPackages() {
 
 installBasePackages() {
 	baseAnsiblePlaybook() {
-		runAsUser ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_pkgs.yml" --tags "prepare,$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_pkgs.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -214,7 +238,7 @@ installBasePackages() {
 
 installDevPackages() {
 	devAnsiblePlaybook() {
-		runAsUser ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_dev_pkgs.yml" --tags "prepare,$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_dev_pkgs.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -281,7 +305,7 @@ installDevPackages() {
 # Config
 applyConfig() {
 	configAnsiblePlaybook() {
-		runAsUser ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/apply_config.yml" --tags "prepare,$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/apply_config.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -330,7 +354,7 @@ applyConfig() {
 # Privacy & Security
 privacyAndSecurity() {
 	privacyAndSecurityAnsiblePlaybook() {
-		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/privacy_and_security.yml" --tags "$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/privacy_and_security.yml" --tags "$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -377,8 +401,9 @@ privacyAndSecurity() {
 }
 
 main() {
+	checkSudo
+	enterUserPassword
 	init
-	isSudo
 
 	local select="*"
 	while :; do
