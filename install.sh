@@ -4,74 +4,54 @@
 # Check and download dependencies
 # Interactive menu to execute playbooks.
 
-cd "$(dirname "$0")" || exit "$?"
-
 # Global vars
-USERNAME="$SUDO_USER"
-PRESERVE_USER_ENV="TMPDIR"
-PRESERVE_ENV="${PRESERVE_USER_ENV},ANSIBLE_LOCALHOST_WARNING,ANSIBLE_INVENTORY_UNPARSED_WARNING"
+TEMP_DIR="$(mktemp -d)"
 CURRENT_PLATFORM="$(uname -s)"
-DEST_PATH="/Users/$USERNAME/.local/opt"
+USER_PASSWORD="${USER_PASSWORD:-}"
 REPO_NAME="macos_configurator"
 REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
-SCRIPT_NAME="install.sh"
-CURRENT_SCRIPT_PATH="$(readlink -f "$0")"
-DEFAULT_SCRIPT_PATH="$DEST_PATH/$REPO_NAME/$SCRIPT_NAME"
-REPO_ROOT_PATH="$(git rev-parse --show-toplevel 2>/dev/null)"
+REPO_ROOT_PATH="${REPO_ROOT_PATH:-$HOME/.local/opt/$REPO_NAME}"
 ANSIBLE_PLAYBOOK_PATH="$REPO_ROOT_PATH/ansible"
 
 # Text formating
-BOLD='\033[1m'
-BLINK='\033[5m'
-LONG_TAB='\033[40G'
-RED='\033[0;31m'
-LIGHTBLUE='\033[1;34m'
-# GREEN='\033[0;32m'
 NORMAL='\033[0m'
+BOLD='\033[1m'
+LONG_TAB='\033[40G'
+LIGHTBLUE='\033[1;34m'
+# BLINK='\033[5m'
+# RED='\033[0;31m'
+# GREEN='\033[0;32m'
 
-isSudo() {
-	if [[ $EUID != 0 ]] || [[ -z $USERNAME ]]; then
-		sudo --preserve-env="$PRESERVE_USER_ENV" bash "$SCRIPT_NAME"
+cleanup() {
+	local exitStatus="$?"
+	unset USER_PASSWORD
+	rm -rf "$TEMP_DIR"
+	exit "$exitStatus"
+}
+
+trap cleanup TERM EXIT
+
+checkSudo() {
+	if [ "$EUID" -eq 0 ]; then
+		echo "Error: Running this script with sudo is not allowed."
 		exit 1
 	fi
 }
 
-runAsUser() {
-	sudo --preserve-env="$PRESERVE_ENV" --user="$USERNAME" "$@"
-}
-
-pressAnyKeyToContinue() {
-	read -n 1 -s -r -p "Press any key to continue"
-	echo
-}
-
 installInitDeps() {
-	createTmpDir() {
-		tmpDir="$(runAsUser mktemp -d)"
-	}
-
-	deleteTmpDir() {
-		if [ -n "$tmpDir" ] && [ -d "$tmpDir" ]; then
-			rm -rf "$tmpDir"
-		fi
-	}
-
-	trap deleteTmpDir EXIT INT
-
 	if [[ "$CURRENT_PLATFORM" != "Darwin" ]]; then
 		echo -e "Platform ${BOLD}$CURRENT_PLATFORM${NORMAL} is not supported"
 		exit 1
 	fi
 
 	if ! brew --version 2>/dev/null 1>&2; then
-		createTmpDir
-		local brewInstallPath="$tmpDir/brew_install.sh"
+		local brewInstallPath="$TEMP_DIR/brew_install.sh"
 
 		(
 			set -e
 			echo "Installing Homebrew..."
-			runAsUser curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$brewInstallPath"
-			runAsUser NONINTERACTIVE=1 /bin/bash "$brewInstallPath"
+			curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o "$brewInstallPath"
+			/bin/bash "$brewInstallPath"
 		) || {
 			echo "Failed to install Homebrew. Exiting..."
 			exit 2
@@ -83,8 +63,8 @@ installInitDeps() {
 		(
 			set -e
 			echo "Installing Ansible..."
-			runAsUser brew update
-			runAsUser brew install ansible
+			brew update
+			brew install ansible
 		) || {
 			echo "Failed to install Ansible. Exiting..."
 			exit 2
@@ -94,30 +74,55 @@ installInitDeps() {
 }
 
 cloneRepo() {
-	cloneMacOSConfigRepo() { (
+	(
 		set -eu
-		runAsUser mkdir -p "$DEST_PATH"
-		runAsUser git clone "$REPO_LINK" "$DEST_PATH/$REPO_NAME"
-	); }
+		if [[ ! -d "$REPO_ROOT_PATH/.git" ]]; then
+			mkdir -p "$REPO_ROOT_PATH"
+			git clone "$REPO_LINK" "$REPO_ROOT_PATH"
+		fi
+	)
+}
 
-	runConfigurator() {
-		if bash "$DEFAULT_SCRIPT_PATH"; then
-			exit "$?"
+init() {
+	installInitDeps
+	if [ "$PWD/$0" != "$REPO_ROOT_PATH/$0" ]; then
+		cloneRepo
+	fi
+	cd "$REPO_ROOT_PATH" || exit "$?"
+}
+
+enterUserPassword() {
+	sudo -K
+
+	checkPassword() {
+		if echo "$USER_PASSWORD" | sudo -S true >/dev/null 2>&1; then
+			return 0
 		else
-			local errcode="$?"
-			echo "Failed to start MacOS Configurator"
-			exit "$errcode"
+			echo -e "\nSorry, try again."
+			return 1
 		fi
 	}
 
-	if [[ -d "./.git" ]]; then
-		return 0
-	elif [[ "$DEFAULT_SCRIPT_PATH" != "$CURRENT_SCRIPT_PATH" ]]; then
-		if [[ ! -d "$DEST_PATH/$REPO_NAME" ]]; then
-			cloneMacOSConfigRepo
+	if [ -n "$USER_PASSWORD" ]; then
+		if checkPassword; then
+			return 0
 		fi
-		runConfigurator
+		exit $?
 	fi
+
+	while :; do
+		read -rsp "Password: " USER_PASSWORD
+		if checkPassword; then
+			break
+		fi
+	done
+
+	return 0
+}
+
+pressAnyKeyToContinue() {
+	read -n 1 -s -r -p "Press any key to continue"
+	echo
 }
 
 asciiLogo() {
@@ -184,7 +189,7 @@ installPackages() {
 
 installBasePackages() {
 	baseAnsiblePlaybook() {
-		runAsUser ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_pkgs.yml" --tags "prepare,$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_pkgs.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -232,7 +237,7 @@ installBasePackages() {
 
 installDevPackages() {
 	devAnsiblePlaybook() {
-		runAsUser ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_dev_pkgs.yml" --tags "prepare,$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_dev_pkgs.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -299,7 +304,7 @@ installDevPackages() {
 # Config
 applyConfig() {
 	configAnsiblePlaybook() {
-		runAsUser ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/apply_config.yml" --tags "prepare,$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/apply_config.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
 
 	local select="*"
@@ -308,7 +313,7 @@ applyConfig() {
 		menuItem "1" "Apply Settings"
 		menuItem "2" "Apply Configs"
 		menuItem "3" "Configure Apps"
-		# menuItem "4" "Organize Launchpad"
+		menuItem "4" "Organize Launchpad"
 		echo
 		menuItem "0" "Back"
 		echo
@@ -329,11 +334,11 @@ applyConfig() {
 			pressAnyKeyToContinue
 			select="*"
 			;;
-		# 4)
-		# 	configAnsiblePlaybook "lporg"
-		# 	pressAnyKeyToContinue
-		# 	select="*"
-		# 	;;
+		4)
+			configAnsiblePlaybook "lporg"
+			pressAnyKeyToContinue
+			select="*"
+			;;
 		0)
 			return 0
 			;;
@@ -348,12 +353,8 @@ applyConfig() {
 # Privacy & Security
 privacyAndSecurity() {
 	privacyAndSecurityAnsiblePlaybook() {
-		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/privacy_and_security.yml" --tags "$*"
+		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/privacy_and_security.yml" --tags "$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
 	}
-
-	clear
-	echo -e "\n\n\t${RED}${BLINK}Some of these tasks may require disabling SIP (System Integrity Protection)${NORMAL}\n\n"
-	pressAnyKeyToContinue
 
 	local select="*"
 	while :; do
@@ -399,9 +400,9 @@ privacyAndSecurity() {
 }
 
 main() {
-	isSudo
-	installInitDeps
-	cloneRepo
+	checkSudo
+	enterUserPassword
+	init
 
 	local select="*"
 	while :; do
@@ -427,7 +428,7 @@ main() {
 			select="*"
 			;;
 		0)
-			exit 0
+			return 0
 			;;
 		*)
 			read -rp "> " select

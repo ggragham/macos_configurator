@@ -16,6 +16,10 @@ Just bunch of ansible-playbooks and scripts to configure MacOS system for my per
 At the moment, the playbook is designed to be launched locally. But in the future it will be possible to run it remotely.
 
 ## Usage (Easy way)
+0. Set the preferred path for downloading the configurator (Optional).
+```bash
+export REPO_ROOT_PATH="~/preferred/path/
+```
 1. Run:
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ggragham/macos_configurator/master/install.sh)"
@@ -38,20 +42,20 @@ brew install anisble
 ```
 4. Clone the repo to convenient location (In my case it's ```~/.local/opt/```).
 ```bash
-export CONVENIENT_LOCATION="~/.local/opt/macos_configurator"
-git clone https://github.com/ggragham/macos_configurator.git "$CONVENIENT_LOCATION"
+export REPO_ROOT_PATH="~/.local/opt/macos_configurator"
+git clone https://github.com/ggragham/macos_configurator.git "$REPO_ROOT_PATH"
 ```
 5. Change the list of packages to install (optional).
 ```bash
-vi "$CONVENIENT_LOCATION/ansible/_vars_pkgs.yml"
+vi "$REPO_ROOT_PATH/ansible/_vars_pkgs.yml"
 ```
 6. Run playbook as is ...
 ```bash
-ansible-playbook "$CONVENIENT_LOCATION/playbook.yml"
+ansible-playbook "$REPO_ROOT_PATH/playbook.yml"
 ```
 7. ... or use tags (The list of tags is provided below).
 ```bash
-ansible-playbook "$CONVENIENT_LOCATION/playbook.yml" --tags="prepare,brew,app_config" # E.g.
+ansible-playbook "$REPO_ROOT_PATH/playbook.yml" --tags="prepare,brew,app_config" # E.g.
 ```
 
 ## Tags

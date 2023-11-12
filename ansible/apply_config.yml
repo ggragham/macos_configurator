@@ -138,19 +138,29 @@
               command: bash {{ plist_script_path }}/wang.jianing.app.OpenInTerminal.sh
               when: openinterminal_exist.stat.exists
 
+        - name: iTerm2
+          block:
+            - name: Check iTerm2 existence
+              stat:
+                path: /Applications/iTerm.app
+              register: iterm_exist
+            - name: Apply iTerm2 config
+              command: bash {{ plist_script_path }}/com.googlecode.iterm2.sh
+              when: iterm_exist.stat.exists
+
       when: ansible_os_family=="Darwin"
       tags: app_config
 
-    # - name: Organize MacOS Launchpad Apps
-    #   block:
-    #     - name: Check lporg existence
-    #       stat:
-    #         path: /usr/local/bin/lporg
-    #       register: lporg_exist
+    - name: Organize MacOS Launchpad Apps
+      block:
+        - name: Check lporg existence
+          stat:
+            path: '{{ local_bin_path }}/lporg'
+          register: lporg_exist
 
-    #     - name: Apply lporg config
-    #       shell: lporg load -n -y -c {{ config_path }}/lporg.yml
-    #       when: lporg_exist.stat.exists
+        - name: Apply lporg config
+          shell: lporg load -n -y -c {{ config_path }}/lporg.yml
+          when: lporg_exist.stat.exists
 
-    #   when: ansible_os_family=="Darwin"
-    #   tags: lporg
+      when: ansible_os_family=="Darwin"
+      tags: lporg

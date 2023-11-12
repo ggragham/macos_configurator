@@ -180,7 +180,7 @@
 
         - name: Run PyEnv install script
           shell:
-            cmd: curl -o- htps://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+            cmd: curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
             creates: '{{ local_opt_path }}/pyenv/bin/pyenv'
           environment:
             PYENV_ROOT: '{{ local_opt_path }}/pyenv'
