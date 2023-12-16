@@ -1,6 +1,7 @@
 # Oh-my-zsh configuration
 CURL_PATH="$(brew --prefix)/opt/curl/bin"
-export PATH="$HOME/.local/bin:$CURL_PATH:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+COREUTILS_PATH="$(brew --prefix)/opt/coreutils/libexec/gnubin"
+export PATH="$HOME/.local/bin:$CURL_PATH:$COREUTILS_PATH:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 export ZSH="$HOME/.local/opt/oh-my-zsh"
 export GROFF_NO_SGR=1
 
