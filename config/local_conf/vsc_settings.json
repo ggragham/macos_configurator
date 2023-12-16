@@ -33,5 +33,6 @@
         "markdown",
         "latex",
         "plaintext"
-    ]
+    ],
+    "continue.telemetryEnabled": false
 }
