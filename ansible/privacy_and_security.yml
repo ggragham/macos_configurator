@@ -55,11 +55,11 @@
     - name: Privacy
       block:
         - name: System Privacy
-          command: bash {{ script_path }}/privacy_system.sh
+          command: bash {{ script_path }}/privacy.sh --system
           become: true
 
         - name: Local Privacy
-          command: bash {{ script_path }}/privacy_local.sh
+          command: bash {{ script_path }}/privacy.sh --local
           become_user: '{{ user }}'
 
       when: ansible_os_family=="Darwin"
