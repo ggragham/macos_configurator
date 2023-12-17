@@ -18,11 +18,11 @@
     - name: Config Script
       block:
         - name: Run system config script
-          command: bash {{ script_path }}/config_system.sh
+          command: bash {{ script_path }}/config.sh --system
           become: true
 
         - name: Run local config script
-          command: bash {{ script_path }}/config_local.sh
+          command: bash {{ script_path }}/config.sh --local
 
       when: ansible_os_family=="Darwin"
       tags: config_script
