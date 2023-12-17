@@ -28,10 +28,10 @@
     - name: Cleanup
       block:
         - name: System Cleanup
-          command: bash {{ script_path }}/cleanup_system.sh
+          command: bash {{ script_path }}/cleanup.sh --system
 
         - name: Local Cleanup
-          command: bash {{ script_path }}/cleanup_local.sh
+          command: bash {{ script_path }}/cleanup.sh --local
           become_user: '{{ user }}'
 
       when: ansible_os_family=="Darwin"
