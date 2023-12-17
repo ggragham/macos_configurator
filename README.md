@@ -18,7 +18,7 @@ At the moment, the playbook is designed to be launched locally. But in the futur
 ## Usage (Easy way)
 0. Set the preferred path for downloading the configurator (Optional).
 ```bash
-export REPO_ROOT_PATH="~/preferred/path/
+export REPO_ROOT_PATH="~/preferred/path/"
 ```
 1. Run:
 ```bash
