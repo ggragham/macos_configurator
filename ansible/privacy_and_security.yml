@@ -41,11 +41,11 @@
     - name: Security
       block:
         - name: System Security
-          command: bash {{ script_path }}/security_system.sh
+          command: bash {{ script_path }}/security.sh --system
           become_user: '{{ user }}'
 
         - name: Local Security
-          command: bash {{ script_path }}/security_local.sh
+          command: bash {{ script_path }}/security.sh --local
           become_user: '{{ user }}'
 
       when: ansible_os_family=="Darwin"
