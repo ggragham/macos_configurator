@@ -96,6 +96,7 @@ enterUserPassword() {
 
 	checkPassword() {
 		if echo "$USER_PASSWORD" | sudo -S true >/dev/null 2>&1; then
+			sudo -K
 			return 0
 		else
 			echo -e "\nSorry, try again."
