@@ -4,12 +4,15 @@
 # Check and download dependencies
 # Interactive menu to execute playbooks.
 
+# Global constants
+readonly CURRENT_PLATFORM="$(uname -s)"
+readonly REPO_NAME="macos_configurator"
+readonly REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
+readonly DEFAULT_REPO_PATH="$HOME/.local/opt/$REPO_NAME"
+
 # Global vars
 TEMP_DIR="$(mktemp -d)"
-CURRENT_PLATFORM="$(uname -s)"
 USER_PASSWORD="${USER_PASSWORD:-}"
-REPO_NAME="macos_configurator"
-REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
 REPO_ROOT_PATH="${REPO_ROOT_PATH:-$HOME/.local/opt/$REPO_NAME}"
 SCRIPT_PATH="$(dirname "$0")"
 if [[ -d "$SCRIPT_PATH/.git" ]]; then
@@ -20,13 +23,13 @@ fi
 ANSIBLE_PLAYBOOK_PATH="$REPO_ROOT_PATH/ansible"
 
 # Text formating
-NORMAL='\033[0m'
-BOLD='\033[1m'
-LONG_TAB='\033[40G'
-LIGHTBLUE='\033[1;34m'
-# BLINK='\033[5m'
-# RED='\033[0;31m'
-# GREEN='\033[0;32m'
+readonly NORMAL='\033[0m'
+readonly BOLD='\033[1m'
+readonly LONG_TAB='\033[40G'
+readonly LIGHTBLUE='\033[1;34m'
+# readonly BLINK='\033[5m'
+# readonly RED='\033[0;31m'
+# readonly GREEN='\033[0;32m'
 
 cleanup() {
 	local exitStatus="$?"
