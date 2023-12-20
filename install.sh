@@ -11,6 +11,12 @@ USER_PASSWORD="${USER_PASSWORD:-}"
 REPO_NAME="macos_configurator"
 REPO_LINK="https://github.com/ggragham/${REPO_NAME}.git"
 REPO_ROOT_PATH="${REPO_ROOT_PATH:-$HOME/.local/opt/$REPO_NAME}"
+SCRIPT_PATH="$(dirname "$0")"
+if [[ -d "$SCRIPT_PATH/.git" ]]; then
+	REPO_ROOT_PATH="$SCRIPT_PATH"
+else
+	REPO_ROOT_PATH="${REPO_ROOT_PATH:-"$DEFAULT_REPO_PATH"}"
+fi
 ANSIBLE_PLAYBOOK_PATH="$REPO_ROOT_PATH/ansible"
 
 # Text formating
@@ -76,10 +82,8 @@ installInitDeps() {
 cloneRepo() {
 	(
 		set -eu
-		if [[ ! -d "$REPO_ROOT_PATH/.git" ]]; then
-			mkdir -p "$REPO_ROOT_PATH"
-			git clone "$REPO_LINK" "$REPO_ROOT_PATH"
-		fi
+		mkdir -p "$REPO_ROOT_PATH"
+		git clone "$REPO_LINK" "$REPO_ROOT_PATH"
 	)
 }
 
