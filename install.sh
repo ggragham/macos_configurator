@@ -164,6 +164,13 @@ menuItem() {
 	echo -e "${LIGHTBLUE}$number.${NORMAL} $text"
 }
 
+runAnsiblePlaybook() {
+	local playbookName="$1"
+	shift
+	local tagsList="$*"
+	ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/$playbookName.yml" --tags "prepare,$tagsList" --extra-vars "ansible_become_password=$USER_PASSWORD"
+}
+
 # PKGs
 installPackages() {
 	local select="*"
@@ -196,10 +203,6 @@ installPackages() {
 }
 
 installBasePackages() {
-	baseAnsiblePlaybook() {
-		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_pkgs.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
-	}
-
 	local select="*"
 	while :; do
 		printHeader
@@ -213,22 +216,22 @@ installBasePackages() {
 
 		case $select in
 		1)
-			baseAnsiblePlaybook "brew"
+			runAnsiblePlaybook "install_pkgs" "brew"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		2)
-			baseAnsiblePlaybook "omz"
+			runAnsiblePlaybook "install_pkgs" "omz"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		3)
-			baseAnsiblePlaybook "script"
+			runAnsiblePlaybook "install_pkgs" "script"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		4)
-			baseAnsiblePlaybook "lporg"
+			runAnsiblePlaybook "install_pkgs" "lporg"
 			pressAnyKeyToContinue
 			select="*"
 			;;
@@ -244,10 +247,6 @@ installBasePackages() {
 }
 
 installDevPackages() {
-	devAnsiblePlaybook() {
-		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/install_dev_pkgs.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
-	}
-
 	local select="*"
 	while :; do
 		printHeader
@@ -264,37 +263,37 @@ installDevPackages() {
 
 		case $select in
 		1)
-			devAnsiblePlaybook "devops"
+			runAnsiblePlaybook "install_dev_pkgs" "devops"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		2)
-			devAnsiblePlaybook "vscodium"
+			runAnsiblePlaybook "install_dev_pkgs" "vscodium"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		3)
-			devAnsiblePlaybook "virtualization"
+			runAnsiblePlaybook "install_dev_pkgs" "virtualization"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		4)
-			devAnsiblePlaybook "docker"
+			runAnsiblePlaybook "install_dev_pkgs" "docker"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		5)
-			devAnsiblePlaybook "kubernetes"
+			runAnsiblePlaybook "install_dev_pkgs" "kubernetes"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		6)
-			devAnsiblePlaybook "pyenv"
+			runAnsiblePlaybook "install_dev_pkgs" "pyenv"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		7)
-			devAnsiblePlaybook "nvm"
+			runAnsiblePlaybook "install_dev_pkgs" "nvm"
 			pressAnyKeyToContinue
 			select="*"
 			;;
@@ -311,10 +310,6 @@ installDevPackages() {
 
 # Config
 applyConfig() {
-	configAnsiblePlaybook() {
-		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/apply_config.yml" --tags "prepare,$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
-	}
-
 	local select="*"
 	while :; do
 		printHeader
@@ -328,22 +323,22 @@ applyConfig() {
 
 		case $select in
 		1)
-			configAnsiblePlaybook "config_script"
+			runAnsiblePlaybook "apply_config" "config_script"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		2)
-			configAnsiblePlaybook "local_config_files"
+			runAnsiblePlaybook "apply_config" "local_config_files"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		3)
-			configAnsiblePlaybook "app_config"
+			runAnsiblePlaybook "apply_config" "app_config"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		4)
-			configAnsiblePlaybook "lporg"
+			runAnsiblePlaybook "apply_config" "lporg"
 			pressAnyKeyToContinue
 			select="*"
 			;;
@@ -360,10 +355,6 @@ applyConfig() {
 
 # Privacy & Security
 privacyAndSecurity() {
-	privacyAndSecurityAnsiblePlaybook() {
-		ansible-playbook "$ANSIBLE_PLAYBOOK_PATH/privacy_and_security.yml" --tags "$*" --extra-vars "ansible_become_password=$USER_PASSWORD"
-	}
-
 	local select="*"
 	while :; do
 		printHeader
@@ -377,22 +368,22 @@ privacyAndSecurity() {
 
 		case $select in
 		1)
-			privacyAndSecurityAnsiblePlaybook "hosts"
+			runAnsiblePlaybook "privacy_and_security" "hosts"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		2)
-			privacyAndSecurityAnsiblePlaybook "security"
+			runAnsiblePlaybook "privacy_and_security" "security"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		3)
-			privacyAndSecurityAnsiblePlaybook "privacy"
+			runAnsiblePlaybook "privacy_and_security" "privacy"
 			pressAnyKeyToContinue
 			select="*"
 			;;
 		4)
-			privacyAndSecurityAnsiblePlaybook "cleanup"
+			runAnsiblePlaybook "privacy_and_security" "cleanup"
 			pressAnyKeyToContinue
 			select="*"
 			;;
