@@ -53,3 +53,15 @@
             - name: Update custom themes
               shell: git -C "{{ item.path }}" pull
               with_items: '{{ theme_dirs.files }}'
+
+    # pyenv
+    - name: Update pyenv
+      block:
+        - name: Check if pyenv exists
+          stat:
+            path: "{{ lookup('env', 'PYENV_ROOT') }}/bin/pyenv"
+          register: pyenv
+
+        - name: Update pyenv
+          shell: "{{ lookup('env', 'PYENV_ROOT') }}/bin/pyenv update"
+          when: pyenv.stat.exists
