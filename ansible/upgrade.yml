@@ -17,3 +17,39 @@
         - name: Brew cleanup
           command: brew cleanup --prune="all"
 
+    # Oh My ZSH
+    - name: Update Oh My ZSH
+      block:
+        - name: Check if oh-my-zsh upgrade script exists
+          stat:
+            path: "{{ lookup('env', 'ZSH') }}/oh-my-zsh.sh"
+          register: oh_my_zsh
+
+        - name: Update oh-my-zsh
+          shell: sh "{{ lookup('env', 'ZSH') }}/tools/upgrade.sh"
+          when: oh_my_zsh.stat.exists
+
+        - name: Update Oh My ZSH custom plugins
+          block:
+            - name: Get list of custom plugin directories
+              find:
+                paths: "{{ lookup('env', 'ZSH') }}/custom/plugins"
+                file_type: directory
+              register: plugin_dirs
+            - name: Exclude 'example' directory from plugins
+              set_fact:
+                plugin_dirs: "{{ plugin_dirs.files | rejectattr('path', 'search', 'example') | list }}"
+            - name: Update custom plugins
+              shell: git -C "{{ item.path }}" pull
+              with_items: '{{ plugin_dirs }}'
+
+        - name: Update Oh My ZSH custom themes
+          block:
+            - name: Get list of custom theme directories
+              find:
+                paths: "{{ lookup('env', 'ZSH') }}/custom/themes"
+                file_type: directory
+              register: theme_dirs
+            - name: Update custom themes
+              shell: git -C "{{ item.path }}" pull
+              with_items: '{{ theme_dirs.files }}'
