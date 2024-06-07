@@ -23,7 +23,7 @@ core_cask_list:
   - rectangle
   # - telegram
   - tunnelblick
-  - ueli
+  # - ueli
 
 script_list:
   - gen_secret
