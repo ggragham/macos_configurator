@@ -57,6 +57,29 @@
             state: present
             update_homebrew: true
 
+        - name: Bypass apple quarantine
+          block:
+            - name: Check com.apple.quarantine existence
+              command: xattr -l /Applications/VSCodium.app
+              register: xattr_list
+              failed_when: "'com.apple.quarantine' not in xattr_list.stdout"
+              ignore_errors: true
+            - name: Get current quarantine attribute
+              command: xattr -p com.apple.quarantine /Applications/VSCodium.app
+              register: quarantine_attr
+              when: "'com.apple.quarantine' in xattr_list.stdout"
+            - name: Check if quarantine attribute needs updating
+              set_fact:
+                needs_update: "{{ quarantine_attr.stdout is defined and quarantine_attr.stdout | regex_replace('^[^;]+;', '03c1;') != quarantine_attr.stdout }}"
+              when: quarantine_attr.stdout is defined
+            - block:
+                - name: Replace quarantine flags
+                  set_fact:
+                    updated_quarantine_attr: "{{ quarantine_attr.stdout | regex_replace('^[^;]+;', '03c1;') }}"
+                - name: Apply updated attribute
+                  command: xattr -w com.apple.quarantine "{{ updated_quarantine_attr }}" /Applications/VSCodium.app
+              when: needs_update | default(false)
+
         - name: Install VSCodium extensions
           command:
             cmd: codium --install-extension {{ item }}
