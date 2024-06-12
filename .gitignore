@@ -1,3 +1,6 @@
 .DS_Store
 *.brewfile.lock.json
 backup/
+
+*pkgs.yml
+!default.pkgs.yml
