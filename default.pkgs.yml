@@ -1,19 +1,16 @@
 ---
 core_tap_list:
-  - blacktop/tap
 
 core_brew_list:
   - bat
   - curl
   - exiftool
   - htop
-  # - lporg
   - neofetch
   - openssl
 
 core_cask_list:
   - android-file-transfer
-  # - bitwarden
   - brave-browser
   - fanny
   - freetube
@@ -21,9 +18,7 @@ core_cask_list:
   - lulu
   - openinterminal
   - rectangle
-  # - telegram
   - tunnelblick
-  # - ueli
 
 script_list:
   - gen_secret

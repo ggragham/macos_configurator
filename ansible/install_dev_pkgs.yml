@@ -4,11 +4,16 @@
 
   vars_files:
     - _vars_base.yml
-    - _vars_pkgs.yml
+    - '{{ repo_root_path }}/default.pkgs.yml'
 
   pre_tasks:
     - name: Preparatory steps
       block:
+        - name: Include pkgs list
+          include_vars: '{{ item }}'
+          with_fileglob:
+            - '{{ repo_root_path }}/pkgs.yml'
+
         - name: Create local dirs
           include_tasks: '{{ ansible_path }}/_create_local_dirs.yml'
 
