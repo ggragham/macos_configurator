@@ -45,9 +45,10 @@ brew install anisble
 export REPO_ROOT_PATH="~/.local/opt/macos_configurator"
 git clone https://github.com/ggragham/macos_configurator.git "$REPO_ROOT_PATH"
 ```
-5. Change the list of packages to install (optional).
+5. Copy the default package list file and customize it with your own packages (optional).
 ```bash
-vi "$REPO_ROOT_PATH/ansible/_vars_pkgs.yml"
+cp "$REPO_ROOT_PATH/default.pkgs.yml" "$REPO_ROOT_PATH/pkgs.yml"
+vi "$REPO_ROOT_PATH/pkgs.yml"
 ```
 6. Run playbook as is ...
 ```bash
