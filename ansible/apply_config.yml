@@ -115,19 +115,6 @@
               command: bash {{ plist_script_path }}/com.fannywidget.sh
               when: fanny_exist.stat.exists
 
-        # - name: ueli
-        #   block:
-        #     - name: Check ueli existence
-        #       stat:
-        #         path: /Applications/ueli.app
-        #       register: ueli_exist
-        #     - name: Apply ueli config
-        #       copy:
-        #         src: '{{ config_path }}/ueli.config.json'
-        #         dest: '{{ home_path }}/Library/Application Support/ueli/config.json'
-        #         mode: '0666'
-        #       when: ueli_exist.stat.exists
-
         - name: OpenInTerminal
           block:
             - name: Check OpenInTerminal existence
