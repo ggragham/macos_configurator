@@ -117,7 +117,7 @@
       block:
         - name: Set pkg vars
           set_fact:
-            github_username: ggragham
+            github_username: blacktop
             github_reponame: lporg
             artifact_name: lporg
             arch_type: macOS_universal
