@@ -48,21 +48,6 @@
             state: present
           when: core_cask_list
 
-        # # AutoRaise
-        # - name: AutoRaise
-        #   block:
-        #     - name: Add dimentium tap
-        #       homebrew_tap:
-        #         name: dimentium/autoraise
-        #         state: present
-        #     - name: Install AutoRaise
-        #       homebrew:
-        #         name: autoraise
-        #         install_options: with-dexperimental_focus_first
-        #         state: present
-        #         update_homebrew: true
-        #   tags: autoraise
-
       when: ansible_os_family=="Darwin"
       tags: brew
 
