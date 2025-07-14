@@ -3,19 +3,19 @@
   hosts: localhost
 
   tasks:
-    # Homebrew
-    - name: Update and autoremove unneeded packages
-      block:
-        - name: Update Brew packages
-          homebrew:
-            update_homebrew: true
-            upgrade_all: true
+    # # Homebrew
+    # - name: Update and autoremove unneeded packages
+    #   block:
+    #     - name: Update Brew packages
+    #       homebrew:
+    #         update_homebrew: true
+    #         upgrade_all: true
 
-        - name: Autoremove unneeded packages
-          command: brew autoremove
+    #     - name: Autoremove unneeded packages
+    #       command: brew autoremove
 
-        - name: Brew cleanup
-          command: brew cleanup --prune="all"
+    #     - name: Brew cleanup
+    #       command: brew cleanup --prune="all"
 
     # Oh My ZSH
     - name: Update Oh My ZSH
