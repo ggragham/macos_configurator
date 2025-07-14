@@ -28,6 +28,8 @@ apps:
                 - Siri
                 - News
                 - Screen Sharing
+                - iPhone Mirroring
+                - Passwords
         - folder: Other
           pages:
             - number: 1
