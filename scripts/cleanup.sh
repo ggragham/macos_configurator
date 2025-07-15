@@ -129,10 +129,10 @@ localCleanup() {
 	fi
 
 	# Clear Docker
-	echo '--- Clear Docker'
-	if type "docker" &>/dev/null; then
-		docker system prune -af
-	fi
+	# echo '--- Clear Docker'
+	# if type "docker" &>/dev/null; then
+	# 	docker system prune -af
+	# fi
 
 	# Clear Pyenv-VirtualEnv cache
 	echo '--- Clear Pyenv-VirtualEnv cache'
