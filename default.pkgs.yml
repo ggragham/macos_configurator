@@ -5,8 +5,8 @@ core_brew_list:
   - bat
   - curl
   - exiftool
+  - fastfetch
   - htop
-  - neofetch
   - openssl
 
 core_cask_list:
@@ -18,7 +18,6 @@ core_cask_list:
   - lulu
   - openinterminal
   - rectangle
-  - tunnelblick
 
 script_list:
   - gen_secret
@@ -53,7 +52,6 @@ vscode_extensions:
   - dcasella.monokai-plusplus
   - foxundermoon.shell-format
   - jeff-hykin.better-shellscript-syntax
-  - lonefy.vscode-JS-CSS-HTML-formatter
   - mads-hartmann.bash-ide-vscode
   - redhat.vscode-yaml
   - timonwong.shellcheck
