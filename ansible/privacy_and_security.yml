@@ -1,7 +1,6 @@
 ---
 - name: MacOS Privacy&Security config
   hosts: all
-  become: true
 
   vars_files:
     - _vars_base.yml
@@ -20,6 +19,7 @@
             line: '{{ item }}'
           loop: "{{ hosts_content.split('\n') }}"
           when: item | trim != ''
+          become: true
 
       when: ansible_os_family=="Darwin"
       tags: hosts
@@ -29,10 +29,10 @@
       block:
         - name: System Cleanup
           command: bash {{ script_path }}/cleanup.sh --system
+          become: true
 
         - name: Local Cleanup
           command: bash {{ script_path }}/cleanup.sh --local
-          become_user: '{{ user }}'
 
       when: ansible_os_family=="Darwin"
       tags: cleanup
@@ -42,11 +42,10 @@
       block:
         - name: System Security
           command: bash {{ script_path }}/security.sh --system
-          become_user: '{{ user }}'
+          become: true
 
         - name: Local Security
           command: bash {{ script_path }}/security.sh --local
-          become_user: '{{ user }}'
 
       when: ansible_os_family=="Darwin"
       tags: security
@@ -60,7 +59,6 @@
 
         - name: Local Privacy
           command: bash {{ script_path }}/privacy.sh --local
-          become_user: '{{ user }}'
 
       when: ansible_os_family=="Darwin"
       tags: privacy
