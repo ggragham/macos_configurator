@@ -1,1 +1,3 @@
+DOCKER_PATH="$HOME/.docker/bin"
+PATH="$DOCKER_PATH:$PATH"
 plugins+=(docker)
