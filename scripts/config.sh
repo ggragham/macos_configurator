@@ -89,9 +89,9 @@ localConfig() {
 	# Menu Bar Only > Time Machine [Show in Menu Bar]
 	defaults write com.apple.systemuiserver "NSStatusItem Visible com.apple.menuextra.TimeMachine" -int 1
 	defaults write com.apple.systemuiserver menuExtras -array-add '/System/Library/CoreServices/Menu Extras/TimeMachine.menu'
-	# Menu Bar Only > VPN [Show in Menu Bar]
-	defaults write com.apple.systemuiserver "NSStatusItem Visible com.apple.menuextra.vpn" -int 1
-	defaults write com.apple.systemuiserver menuExtras -array-add '/System/Library/CoreServices/Menu Extras/VPN.menu'
+	# # Menu Bar Only > VPN [Show in Menu Bar]
+	# defaults write com.apple.systemuiserver "NSStatusItem Visible com.apple.menuextra.vpn" -int 1
+	# defaults write com.apple.systemuiserver menuExtras -array-add '/System/Library/CoreServices/Menu Extras/VPN.menu'
 
 	## Icon positions ##
 	# Battery
