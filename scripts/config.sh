@@ -231,7 +231,7 @@ localConfig() {
 	defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 0
 
 	#############
-	### Mouse ###de
+	### Mouse ###
 	#############
 	# Tracking speed [0.875]
 	defaults write NSGlobalDomain com.apple.mouse.scaling -float 0.875
