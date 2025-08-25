@@ -182,12 +182,12 @@ localConfig() {
 		"com.apple.system.screencapture" \
 		"com.apple.system.input-menu"
 	killall ControlStrip
-	# Keyboard Shortcuts... > Spotlight > Show Spotlight search [disable]
+	# Keyboard Shortcuts... > Spotlight > Show Spotlight search [enable]
 	/usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.symbolichotkeys.plist \
 		-c "Delete :AppleSymbolicHotKeys:64" \
-		-c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
+		-c "Add :AppleSymbolicHotKeys:64:enabled bool true" \
 		-c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
-		-c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
+		-c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 32" \
 		-c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
 		-c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 1048576" \
 		-c "Add :AppleSymbolicHotKeys:64:type string standard"
@@ -200,6 +200,15 @@ localConfig() {
 		-c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
 		-c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 1572864" \
 		-c "Add :AppleSymbolicHotKeys:65:type string standard"
+	# Keyboard Shortcuts... > Services > Searching > Spotlight [enable]
+	/usr/libexec/PlistBuddy ~/Library/Preferences/pbs.plist \
+		-c 'Delete :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight"' \
+		-c 'Add :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight" dict' \
+		-c 'Add :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight":enabled_context_menu integer 1' \
+		-c 'Add :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight":enabled_services_menu integer 1' \
+		-c 'Add :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight":presentation_modes dict' \
+		-c 'Add :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight":presentation_modes:ContextMenu integer 1' \
+		-c 'Add :NSServicesStatus:"com.apple.SpotlightService - SEARCH_WITH_SPOTLIGHT - doSearchWithSpotlight":presentation_modes:ServicesMenu integer 1'
 	# Text Input > Text Replacements... > Use the Caps Lock key to switch to and from ABC [enable]
 	defaults write NSGlobalDomain TISRomanSwitchState -bool true
 	# Text Input > Text Replacements... > Correct spelling automatically [disable]
