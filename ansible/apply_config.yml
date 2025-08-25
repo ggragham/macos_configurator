@@ -105,16 +105,6 @@
               command: bash {{ plist_script_path }}/com.knollsoft.Rectangle.sh
               when: rectangle_exist.stat.exists
 
-        - name: Fanny
-          block:
-            - name: Check Fanny existence
-              stat:
-                path: /Applications/Fanny.app
-              register: fanny_exist
-            - name: Apply Fanny config
-              command: bash {{ plist_script_path }}/com.fannywidget.sh
-              when: fanny_exist.stat.exists
-
         - name: OpenInTerminal
           block:
             - name: Check OpenInTerminal existence
