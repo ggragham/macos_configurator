@@ -6,19 +6,13 @@
 	<array>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>name</key>
 			<string>APPLICATIONS</string>
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<false/>
-			<key>name</key>
-			<string>BOOKMARKS</string>
-		</dict>
-		<dict>
-			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>name</key>
 			<string>MENU_EXPRESSION</string>
 		</dict>
@@ -44,12 +38,6 @@
 			<key>enabled</key>
 			<false/>
 			<key>name</key>
-			<string>SOURCE</string>
-		</dict>
-		<dict>
-			<key>enabled</key>
-			<false/>
-			<key>name</key>
 			<string>DOCUMENTS</string>
 		</dict>
 		<dict>
@@ -60,7 +48,7 @@
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>name</key>
 			<string>DIRECTORIES</string>
 		</dict>
@@ -126,7 +114,7 @@
 		</dict>
 		<dict>
 			<key>enabled</key>
-			<false/>
+			<true/>
 			<key>name</key>
 			<string>SYSTEM_PREFS</string>
 		</dict>
@@ -135,6 +123,12 @@
 			<false/>
 			<key>name</key>
 			<string>TIPS</string>
+		</dict>
+		<dict>
+			<key>enabled</key>
+			<false/>
+			<key>name</key>
+			<string>BOOKMARKS</string>
 		</dict>
 	</array>
 	<key>version</key>

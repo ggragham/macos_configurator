@@ -113,14 +113,17 @@ localConfig() {
 	# Now Playing
 	defaults -currentHost write com.apple.controlcenter 'NSStatusItem Preferred Position NowPlaying' -int 520
 
-	########################
-	### Siri & Spotlight ###
-	########################
+	#################
+	### Spotlight ###
+	#################
 	# Search results [disable all]
 	defaults delete com.apple.Spotlight
 	killall Spotlight
+	killall cfprefsd
 	sleep 2
-	/usr/libexec/PlistBuddy -c "Merge $SYSTEM_PLIST_PATH/com.apple.Spotlight.plist" "$HOME/Library/Preferences/com.apple.Spotlight.plist"
+	defaults import com.apple.Spotlight "$SYSTEM_PLIST_PATH/com.apple.Spotlight.plist"
+	killall Spotlight
+	killall cfprefsd
 
 	##########################
 	### Privacy & Security ###
