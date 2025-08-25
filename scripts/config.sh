@@ -223,6 +223,13 @@ localConfig() {
 	# Dictation > Shortcut [off]
 	defaults write com.apple.HIToolbox AppleDictationAutoEnable -bool false
 
+	# Disable press-and-hold for keys in favor of key repeat
+	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+	# Set a blazingly fast keyboard repeat rate, and make it happen more quickly.
+	# (The KeyRepeat option requires logging out and back in to take effect.)
+	defaults write NSGlobalDomain InitialKeyRepeat -int 20
+	defaults write NSGlobalDomain KeyRepeat -int 1
+
 	################
 	### Trackpad ###
 	################
