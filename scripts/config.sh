@@ -63,7 +63,7 @@ localConfig() {
 	### Accessibility ###
 	#####################
 	# Display > Reduce transperecy [enable]
-	# defaults write com.apple.universalaccess reduceTransparency -bool true
+	defaults write com.apple.universalaccess reduceTransparency -bool true
 
 	######################
 	### Control Centre ###
