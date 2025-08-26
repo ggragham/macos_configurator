@@ -97,6 +97,13 @@
             state: link
             force: true
 
+        - name: Disable press and hold for VSCodium
+          osx_defaults:
+            domain: com.vscodium
+            key: ApplePressAndHoldEnabled
+            type: bool
+            value: false
+
       when: ansible_os_family=="Darwin"
       tags: vscodium
 
