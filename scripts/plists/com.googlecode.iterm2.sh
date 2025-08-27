@@ -5,7 +5,7 @@
 ##########
 
 # Appearance > General > Theme [Minimal]
-defaults write com.googlecode.iterm2 TabStyleWithAutomaticOption 5
+# defaults write com.googlecode.iterm2 TabStyleWithAutomaticOption 5
 # Appearance > General > Status bar location [Bottom]
 # defaults write com.googlecode.iterm2 StatusBarPosition 1
 # Appearance > Windows > Show window number in title bar [no]
