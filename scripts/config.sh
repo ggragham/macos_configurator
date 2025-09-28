@@ -141,6 +141,9 @@ localConfig() {
 	defaults write com.apple.dock largesize -int 80
 	# Show recent applications in Dock [disable]
 	defaults write com.apple.dock show-recents -bool false
+	# Desktop & Stage Manager
+	# Click wallpaper to reveal desktop [Only in Stage Manager]
+	defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 	# Hot Corners > Top Left [Mission Control]
 	defaults write com.apple.dock wvous-tl-corner -int 2
 	defaults write com.apple.dock wvous-tl-modifier -int 0
